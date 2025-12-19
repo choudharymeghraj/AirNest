@@ -1,0 +1,218 @@
+<% layout('/layouts/boilerplate') %>
+
+    <div class="container py-5">
+
+      <!-- Listing Title -->
+      <h2 class="mb-4 fw-bold text-dark">
+        <%= listing.title %>
+      </h2>
+
+      <!-- Listing Image -->
+      <div class="mb-4">
+        <img src="<%= listing.image && listing.image.url
+        ? listing.image.url
+        : 'https://images.unsplash.com/photo-1625505826533-5c80aca7d157?auto=format&fit=crop&w=800&q=60' %>"
+          class="img-fluid rounded-3 shadow" alt="listing_image"
+          style="object-fit: cover; height: 450px; width: 100%;" />
+      </div>
+
+      <!-- Listing Details Grid -->
+      <div class="row g-4 mb-5">
+
+        <!-- Left Column -->
+        <div class="col-md-8">
+
+          <!-- Owner Section -->
+          <div class="mb-4 p-4 bg-light rounded-3">
+            <p class="text-muted text-uppercase fw-semibold mb-2" style="font-size: 0.75rem; letter-spacing: 1px;">
+              Owned By
+            </p>
+            <p class="fs-5 fw-bold text-dark mb-0">
+              <i class="fas fa-user-circle me-2 text-primary"></i>
+              <%= listing.owner ? listing.owner.username : "Unknown Host" %>
+            </p>
+          </div>
+
+          <!-- Description Section -->
+          <div class="mb-4 p-3 border-start border-4 border-primary bg-light rounded-3">
+            <p class="text-primary text-uppercase fw-semibold mb-2" style="font-size: 0.75rem; letter-spacing: 1px;">
+              <i class="fas fa-info-circle me-2"></i>About This Listing
+            </p>
+            <p class="fs-6 text-dark lh-base mb-0">
+              <%= listing.description %>
+            </p>
+          </div>
+
+          <!-- Location & Country -->
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="p-3 bg-light rounded-3">
+                <p class="text-muted text-uppercase fw-semibold mb-2" style="font-size: 0.75rem; letter-spacing: 1px;">
+                  Location
+                </p>
+                <p class="fs-6 fw-semibold mb-0">
+                  <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                  <%= listing.location %>
+                </p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="p-3 bg-light rounded-3">
+                <p class="text-muted text-uppercase fw-semibold mb-2" style="font-size: 0.75rem; letter-spacing: 1px;">
+                  Country
+                </p>
+                <p class="fs-6 fw-semibold mb-0">
+                  <i class="fas fa-globe text-info me-2"></i>
+                  <%= listing.country %>
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column - Price Card -->
+        <div class="col-md-4">
+          <div class="p-4 border rounded-3 shadow-sm sticky-top"
+            style="top: 20px; background: linear-gradient(135deg, #ff5f6d 0%, #d4145a 100%); color: white;">
+            <p class="text-white-50 text-uppercase fw-semibold mb-2" style="font-size: 0.75rem; letter-spacing: 1px;">
+              Price Per Night
+            </p>
+            <h3 class="fw-bold mb-4">
+              &#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %>
+            </h3>
+
+            <!-- Action Buttons -->
+            <% if(currUser && listing.owner && currUser._id.equals(listing.owner._id)) { %>
+              <div class="d-grid gap-2">
+                <a href="/listings/<%= listing._id %>/edit" class="btn btn-light btn-lg">
+                  <i class="fas fa-edit me-2"></i> Edit
+                </a>
+                <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+                  <button type="submit" class="btn btn-danger btn-lg w-100">
+                    <i class="fas fa-trash me-2"></i> Delete
+                  </button>
+                </form>
+              </div>
+              <% } %>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Reviews Section -->
+      <div class="row mt-5">
+        <div class="col-md-8">
+          <!-- Review Form -->
+          <div class="mb-5">
+            <h4 class="mb-4 fw-bold text-dark">
+              <i class="fas fa-star text-warning me-2"></i>Leave a Review
+            </h4>
+
+            <% if (currUser) { %>
+            <form method="POST" action="/listings/<%= listing._id %>/reviews" novalidate
+              class="needs-validation p-4 bg-light rounded-3 shadow-sm">
+
+              <div class="mb-4">
+                <label class="form-label fw-semibold text-muted text-uppercase"
+                  style="font-size: 0.75rem; letter-spacing: 1px;">Rating</label>
+                <input type="range" min="1" max="5" name="review[rating]" class="form-range" id="ratingRange">
+                <div class="text-center">
+                  <span class="badge bg-warning text-dark fs-6" id="ratingValue">3 ⭐</span>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label fw-semibold text-muted text-uppercase"
+                  style="font-size: 0.75rem; letter-spacing: 1px;">Comment</label>
+                <textarea name="review[comment]" rows="4" class="form-control" placeholder="Share your experience..."
+                  required></textarea>
+                <div class="invalid-feedback">
+                  Please enter a comment.
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-lg px-4">
+                <i class="fas fa-paper-plane me-2"></i>Submit Review
+              </button>
+            </form>
+            <% } else { %>
+              <div class="p-4 bg-light rounded-3 text-center">
+                <p class="mb-2 fw-semibold text-muted">Log in to leave a review.</p>
+                <a class="btn btn-outline-primary" href="/login">Go to Login</a>
+              </div>
+            <% } %>
+
+          </div>
+
+          <!-- All Reviews -->
+          <div class="mb-5">
+            <h4 class="mb-4 fw-bold text-dark">
+              <i class="fas fa-comments text-info me-2"></i>All Reviews (<%= listing.reviews.length %>)
+            </h4>
+
+            <div class="row g-3">
+              <% if (listing.reviews.length===0) { %>
+                <div class="col-12">
+                  <p class="text-muted text-center py-5">No reviews yet. Be the first to review!</p>
+                </div>
+                <% } %>
+
+                  <% for (let review of listing.reviews) { %>
+                    <div class="col-md-6">
+                      <div class="p-4 bg-light rounded-3 shadow-sm h-100">
+                  
+                        <div class="d-flex align-items-center mb-3">
+                          <% const avatarLetter = (review.author && review.author.username)
+                            ? review.author.username.charAt(0).toUpperCase()
+                            : "U"; %>
+                          <div
+                            class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                            style="width: 45px; height: 45px; font-size: 1.2rem; font-weight: bold;">
+                            <%= avatarLetter %>
+                          </div>
+                          <div>
+                            <h6 class="mb-0 fw-bold"><%= review.author ? review.author.username : "Guest" %></h6>
+                            <small class="text-muted">Verified Guest</small>
+                          </div>
+                        </div>
+
+                        <div class="mb-3">
+                          <span class="badge bg-warning text-dark fs-6">
+                            <%= review.rating %> ⭐
+                          </span>
+                        </div>
+
+                        <p class="text-dark mb-3 lh-base">
+                          <%= review.comment %>
+                        </p>
+
+                        <form method="POST"
+                          action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                          <button class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-trash me-1"></i>Delete
+                          </button>
+                        </form>
+
+                      </div>
+                    </div>
+                    <% } %>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <script>
+        // Rating slider value display
+        const ratingRange = document.getElementById('ratingRange');
+        const ratingValue = document.getElementById('ratingValue');
+
+        if (ratingRange && ratingValue) {
+          ratingRange.addEventListener('input', function () {
+            ratingValue.textContent = this.value + ' ⭐';
+          });
+        }
+      </script>
+    </div>
