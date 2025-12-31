@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+}
 const mongoose = require("mongoose");
 const express = require("express");
 const app = express();
@@ -14,13 +17,29 @@ const User = require("./models/user.js");
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
+const bookingRouter = require("./routes/booking.js"); // <--- NEW: Imported Booking Route
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
 // -------------------- DATABASE --------------------
+async function ensureListingIndexes() {
+    try {
+        const collection = mongoose.connection.db.collection("listings");
+        const indexes = await collection.indexes();
+        const titleIndex = indexes.find((idx) => idx.name === "title_1" && idx.unique);
+        if (titleIndex) {
+            await collection.dropIndex("title_1");
+            console.log("Dropped legacy unique index title_1 on listings");
+        }
+    } catch (err) {
+        console.warn("Index cleanup skipped:", err.message);
+    }
+}
+
 async function main() {
     await mongoose.connect(MONGO_URL);
     console.log("Connected to DB");
+    await ensureListingIndexes();
 }
 main().catch(err => console.log(err));
 
@@ -33,6 +52,7 @@ app.engine("ejs", ejsMate);
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // -------------------- SESSION --------------------
 const sessionOptions = {
@@ -57,11 +77,10 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// -------------------- GLOBAL VARIABLES (FIX HERE) --------------------
+// -------------------- GLOBAL VARIABLES --------------------
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
-    // expose logged-in user under both keys for existing templates
     res.locals.currentUser = req.user;
     res.locals.currUser = req.user;
     next();
@@ -75,6 +94,7 @@ app.get("/", (req, res) => {
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
+app.use("/", bookingRouter); // <--- NEW: Connected Booking Routes here
 
 // -------------------- 404 HANDLER --------------------
 app.all(/(.*)/, (req, res, next) => {

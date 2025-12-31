@@ -1,151 +1,338 @@
-body{
+/* =====================================================
+   Global Reset & Base
+===================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-  font-family: "Plus Jakarta Sans", sans-serif !important;
-}
-.container{
-    flex: 1;
-}
-
-/* Make the page stretch so footer can stick to bottom when content is short */
-html, body {
-    height: 100%;
-}
+html,
 body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+  height: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
-    
-.navbar{
-        height: 5rem;
-        background-color: white;
-    }
-.fa-compass{
-        color: #fe424d;
-        font-size: 2rem;
-    }
-.nav-link{
-        
-        color:#222222 !important;
-    }
- .f-info-links a {
-    text-decoration: none;
-    color: #222222;
-    margin-right: 1rem;
+body {
+  font-family: "Plus Jakarta Sans", sans-serif !important;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+/* =====================================================
+   Bootstrap Row Fix (LEFT ALIGNMENT FIX)
+===================================================== */
+.row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* =====================================================
+   Main Container (Balanced & Compact)
+===================================================== */
+.container {
+  flex: 1;
+  max-width: 100%;
+  padding: 1.25rem 3rem;
+  /* ⬅ reduced top padding */
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+  .container {
+    padding: 1.25rem 2rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  .container {
+    padding: 1rem 1rem;
+  }
+}
+
+/* =====================================================
+   Navbar
+===================================================== */
+.navbar {
+  height: 5rem;
+  background-color: #ffffff;
+  padding: 0 1.25rem;
+}
+
+.fa-compass {
+  color: #fe424d;
+  font-size: 2rem;
+}
+
+.navbar-brand {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.nav-link {
+  color: #222222 !important;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+}
+
+.nav-link:hover {
+  color: #fe424d !important;
+}
+
+/* =====================================================
+   Navbar Search
+===================================================== */
+.nav-search {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.nav-search form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  border-radius: 25px !important;
+  padding: 0.7rem 1.5rem !important;
+  font-size: 0.95rem;
+  border: 1px solid #dddddd;
+}
+
+.search-input:focus {
+  border-color: #cdcdcd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-btn-primary {
+  border-radius: 25px !important;
+  background-color: #ff385c !important;
+  color: #ffffff !important;
+  padding: 0.7rem 1.25rem !important;
+  border: none !important;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.search-btn-primary:hover {
+  background-color: #d93b53 !important;
+}
+
+@media (max-width: 768px) {
+  .nav-search {
+    max-width: 100%;
+    margin: 0;
+  }
+}
+
+/* =====================================================
+   Listing Filters (GAP REDUCED)
+===================================================== */
+.listing-filters {
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  background-color: #ffffff;
+  padding: 0.5rem 0;
+  /* ⬅ reduced */
+  margin-bottom: 0.75rem;
+  /* ⬅ tighter gap */
+  max-width: 100%;
+}
+
+.filters-container {
+  width: 100%;
+  max-width: 100%;
+}
+
+.filters-actions {
+  gap: 0.75rem !important;
+}
+
+/* Divider under filters */
+.listing-filters hr {
+  margin: 0.5rem 0;
+}
+
+@media (max-width: 991px) {
+  .listing-filters {
+    position: static;
+  }
+}
+
+/* =====================================================
+   Category Scroller
+===================================================== */
+.category-scroller {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.category-row {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0 0.5rem;
+  max-width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: #cfcfcf transparent;
+}
+
+.category-row::-webkit-scrollbar {
+  height: 6px;
+}
+
+.category-row::-webkit-scrollbar-thumb {
+  background-color: #cfcfcf;
+  border-radius: 4px;
+}
+
+.category-item {
+  min-width: 64px;
+  color: #5a5a5a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.35rem 0.35rem;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.category-item i {
+  font-size: 1.05rem;
+}
+
+.category-item small {
+  font-size: 0.75rem;
+}
+
+.category-item:hover,
+.category-item.active {
+  color: #ff5a5f;
+  border-bottom-color: #ff5a5f;
+}
+
+/* =====================================================
+   Listings / Cards
+===================================================== */
+.listing-card {
+  border: none !important;
+  margin-bottom: 2rem;
+}
+
+/* Remove extra top gap before first row */
+.container>.row:first-child {
+  margin-top: 0 !important;
+}
+
+.card-img-top {
+  width: 100% !important;
+  border-radius: 1rem !important;
+  object-fit: cover !important;
+}
+
+.card-body {
+  padding: 0 !important;
+}
+
+.card-img-overlay {
+  opacity: 0;
+}
+
+.card:hover .card-img-overlay {
+  opacity: 0.2;
+  background-color: #ffffff;
+}
+
+/* =====================================================
+   Buttons
+===================================================== */
+.add-btn,
+.save-btn {
+  background-color: #fe424d !important;
+  border-color: #fe424d !important;
+  color: #ffffff !important;
+}
+
+.add-btn:hover,
+.save-btn:hover {
+  background-color: #e33a3d !important;
+  border-color: #e33a3d !important;
+}
+
+/* =====================================================
+   Tax Toggle
+===================================================== */
+.tax-toggle {
+  border: 1px solid #dddddd;
+  border-radius: 12px;
+  padding: 0.7rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: #ffffff;
+}
+
+.tax-toggle:hover {
+  border-color: #222222;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.tax-toggle label {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* =====================================================
+   Footer
+===================================================== */
+footer {
+  margin-top: auto;
+}
+
+.f-info {
+  background-color: #f2f2f2;
+  text-align: center;
+  padding: 1.25rem 0;
+}
+
+.f-info-links a {
+  color: #222222;
+  text-decoration: none;
+  margin: 0 0.5rem;
 }
 
 .f-info-links a:hover {
-    text-decoration: underline !important;
-    cursor: pointer;
-}
-.f-info-links {
-    width:100%;
-
-}
-    .f-info {
-        text-align: center;
-        background-color: #f2f2f2;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        padding: 1rem 0;
-    }
-    .f-info-social {
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
-    }
-    .f-info-social i{
-        font-size: 1.1rem;
-        color: #222222;
-    }
-    .f-info-brand{
-        font-weight: 500;
-        color: #222222;
-    }
-    .f-info-links a {
-        text-decoration: none;
-        color: #222222;
-        margin: 0 0.5rem;
-    }
-    .f-info-links a:hover {
-        text-decoration: underline !important;
-        cursor: pointer;
-    }
-
-    /* ensure footer sits at the bottom when page content is short */
-    footer{
-        margin-top: auto;
-    }
-.listing-card{
-    border:none !important;
-    margin-bottom:2rem ;
-
-}
-.card-img-top{
-    border-radius: 1rem  !important;
-    width:100% !important;
-    object-fit: cover !important;
-
-}
-.card-body
-{
-    padding: 0 !important;
-
-
-}
-.card-img-overlay{
-   opacity: 0;
+  text-decoration: underline;
 }
 
-.card:hover .card-img-overlay{
-opacity: 0.2;
-background-color:white;
-}
-.add-btn{
-    background-color:#fe424d;
+.f-info-social {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-/* Save button styling (used in edit form) */
-.save-btn {
-    background-color: #fe424d !important;
-    border-color: #fe424d !important;
-    color: #ffffff !important;
-}
-.save-btn:hover,
-.save-btn:focus {
-    background-color: #e33a3d !important;
-    border-color: #e33a3d !important;
-    color: #ffffff !important;
+.f-info-social i {
+  font-size: 1.1rem;
+  color: #222222;
 }
 
-/* Error / Not Found page styles */
-.error-page{
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-}
-.error-card{
-    max-width: 720px;
-    width: 100%;
-    border-radius: 12px;
-    border: none;
-    background: #fff;
-}
-.error-card .card-title{
-    font-weight: 600;
-    font-size: 1.5rem;
-}
-.error-card p{
-    margin-bottom: 1rem;
-}
-
-/* subtle improvement for footer spacing */
-.f-info{
-    text-align: center;
-    height: auto;
-    padding: 1.25rem 0;
-    background-color: #f2f2f2;
+.f-info-brand {
+  font-weight: 500;
+  color: #222222;
 }

@@ -1,33 +1,102 @@
 <% layout("/layouts/boilerplate") %>
 
-    <h3>All Listings</h3>
-    <!-- <form method="GET" action="/listings/new">
-        <button>Create New Listing</button>
-    </form> -->
+  <section class="listing-filters py-2 mb-2 border-bottom">
+    <div class="filters-container d-flex align-items-center flex-nowrap">
 
-    <div class="row">
-        <% for (let listing of alllistings) { %>
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex justify-content-center">
-                <a href="/listings/<%= listing._id %>" style="text-decoration: none; color: inherit; width: 100%;">
-                    <div class="card col listing-card" style="width: 20rem;">
-                        <img src="<%= (listing.image && listing.image.url) ? listing.image.url : (listing.image ? listing.image : 'https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGdvYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60') %>"
-                            alt="<%= listing.title %>" class="card-img-top"
-                            style="width: 100%; height: 20rem; object-fit: cover;">
-                        <div class="card-img-overlay"></div>
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title"><b>
-                                    <%= listing.title %>
-                                </b></h5>
-                            <p class="card-text text-truncate">
-                                <%= listing.description %>
-                            </p>
-                            <p class="card-text mt-auto">
-                                <strong>₹ <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %>
-                                </strong> per night
-                            </p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <% } %>
+      <div class="category-scroller flex-grow-1 overflow-hidden">
+        <div class="d-flex align-items-center overflow-auto flex-nowrap category-row">
+          <a class="category-item text-center <%= category == 'Farms' ? 'active' : '' %>"
+            href="/listings?category=Farms">
+            <i class="fa-solid fa-tractor"></i>
+            <small>Farms</small>
+          </a>
+          <a class="category-item text-center <%= category == 'Rooms' ? 'active' : '' %>"
+            href="/listings?category=Rooms">
+            <i class="fa-solid fa-bed"></i>
+            <small>Rooms</small>
+          </a>
+          <a class="category-item text-center <%= category == 'Amazing views' ? 'active' : '' %>"
+            href="/listings?category=Amazing views">
+            <i class="fa-solid fa-mountain-sun"></i>
+            <small>Amazing views</small>
+          </a>
+          <a class="category-item text-center <%= category == 'Iconic cities' ? 'active' : '' %>"
+            href="/listings?category=Iconic cities">
+            <i class="fa-solid fa-city"></i>
+            <small>Iconic cities</small>
+          </a>
+          <a class="category-item text-center <%= category == 'Surfing' ? 'active' : '' %>"
+            href="/listings?category=Surfing">
+            <i class="fa-solid fa-person-swimming"></i>
+            <small>Surfing</small>
+          </a>
+          <a class="category-item text-center <%= category == 'Amazing pools' ? 'active' : '' %>"
+            href="/listings?category=Amazing pools">
+            <i class="fa-solid fa-water-ladder"></i>
+            <small>Amazing pools</small>
+          </a>
+          <a class="category-item text-center <%= category == 'Beach' ? 'active' : '' %>"
+            href="/listings?category=Beach">
+            <i class="fa-solid fa-umbrella-beach"></i>
+            <small>Beach</small>
+          </a>
+          <a class="category-item text-center <%= category == 'Cabins' ? 'active' : '' %>"
+            href="/listings?category=Cabins">
+            <i class="fa-solid fa-campground"></i>
+            <small>Cabins</small>
+          </a>
+          <a class="category-item text-center <%= category == 'OMG!' ? 'active' : '' %>" href="/listings?category=OMG!">
+            <i class="fa-regular fa-face-grin-stars"></i>
+            <small>OMG!</small>
+          </a>
+          <a class="category-item text-center <%= category == 'Lakefront' ? 'active' : '' %>"
+            href="/listings?category=Lakefront">
+            <i class="fa-solid fa-water"></i>
+            <small>Lakefront</small>
+          </a>
+        </div>
+      </div>
+
+      <div class="filters-actions ms-3 d-flex align-items-center flex-shrink-0">
+        <div class="tax-toggle">
+          <div class="form-check-reverse form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="totalToggle">
+            <label class="form-check-label" for="totalToggle">Display total after taxes</label>
+          </div>
+        </div>
+      </div>
     </div>
+
+    </div>
+  </section>
+
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 g-4 mt-2">
+    <% for (let listing of alllistings) { %>
+      <div class="col">
+        <a href="/listings/<%= listing._id %>" style="text-decoration: none; color: inherit;">
+          <div class="card listing-card h-100">
+            <img
+              src="<%= listing.image && listing.image.url ? listing.image.url : 'https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGdvYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60' %>"
+              alt="<%= listing.title %>" class="card-img-top" style="width: 100%; height: 18rem; object-fit: cover;">
+            <div class="card-img-overlay"></div>
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title"><b>
+                  <%= listing.title %>
+                </b></h5>
+              <p class="card-text text-truncate">
+                <%= listing.description %>
+              </p>
+              <p class="card-text mt-auto">
+                <strong>
+                  ₹ <span class="price-value" data-base-price="<%= listing.price || 0 %>">
+                    <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %>
+                  </span>
+                  <span class="gst-label">+18% GST</span>
+                </strong> per night
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <% } %>
+  </div>
