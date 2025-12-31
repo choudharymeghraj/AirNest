@@ -6,11 +6,28 @@
       <h3 class="mb-4">Edit your Listing</h3>
 
       <form method="POST" action="/listings/<%= listing._id %>?_method=PUT"
-        novalidate class="needs-validation">
+        novalidate class="needs-validation" enctype="multipart/form-data">
         <div class="mb-3">
           <label for="title" class="form-label">Title</label>
           <input id="title" name="listing[title]" value="<%= listing.title %>" type="text" class="form-control" required />
           <div class="valid-feedback">Title looks good!</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="category" class="form-label">Category</label>
+          <select id="category" name="listing[category]" class="form-select" required>
+            <option value="Farms" <%= listing.category === 'Farms' ? 'selected' : '' %>>Farms</option>
+            <option value="Rooms" <%= listing.category === 'Rooms' ? 'selected' : '' %>>Rooms</option>
+            <option value="Amazing views" <%= listing.category === 'Amazing views' ? 'selected' : '' %>>Amazing views</option>
+            <option value="Iconic cities" <%= listing.category === 'Iconic cities' ? 'selected' : '' %>>Iconic cities</option>
+            <option value="Surfing" <%= listing.category === 'Surfing' ? 'selected' : '' %>>Surfing</option>
+            <option value="Amazing pools" <%= listing.category === 'Amazing pools' ? 'selected' : '' %>>Amazing pools</option>
+            <option value="Beach" <%= listing.category === 'Beach' ? 'selected' : '' %>>Beach</option>
+            <option value="Cabins" <%= listing.category === 'Cabins' ? 'selected' : '' %>>Cabins</option>
+            <option value="OMG!" <%= listing.category === 'OMG!' ? 'selected' : '' %>>OMG!</option>
+            <option value="Lakefront" <%= listing.category === 'Lakefront' ? 'selected' : '' %>>Lakefront</option>
+          </select>
+          <div class="invalid-feedback">Please select a category.</div>
         </div>
 
         <div class="mb-3">
@@ -21,10 +38,17 @@
         </div>
 
         <div class="mb-3">
-          <label for="image" class="form-label">Image Link</label>
-          <input id="image" name="listing[image]" value="<%= listing.image && listing.image.url ? listing.image.url : '' %>" type="text" class="form-control" required />
-                  <div class="invalid-feedback">Please Enter a Valid Image Link.</div>
+          <label for="image" class="form-label">Upload New Image (optional)</label>
+          <input id="image" name="listing[image]" type="file" class="form-control" accept="image/*" />
+          <div class="form-text">Keep empty to retain the current image shown below.</div>
+        </div>
 
+        <div class="mb-3 text-center">
+          <p class="mb-2 fw-semibold">Current Image</p>
+          <img src="<%= listing.image && listing.image.url
+        ? listing.image.url
+        : 'https://images.unsplash.com/photo-1625505826533-5c80aca7d157?auto=format&fit=crop&w=800&q=60' %>" 
+            alt="Current listing image" class="img-fluid rounded shadow" style="max-height: 240px; object-fit: cover;" />
         </div>
 
         <div class="row">

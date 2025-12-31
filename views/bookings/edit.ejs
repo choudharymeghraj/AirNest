@@ -1,0 +1,42 @@
+<% layout("/layouts/boilerplate") %>
+    <div class="row mt-3">
+        <div class="col-8 offset-2">
+            <h3 class="fw-bold mb-4">Edit Booking</h3>
+            <div class="card shadow-sm border-0 p-4">
+                <h5 class="fw-bold mb-3">
+                    <%= booking.listing.title %>
+                </h5>
+                <p class="text-muted">
+                    <%= booking.listing.location %>, <%= booking.listing.country %>
+                </p>
+
+                <form action="/bookings/<%= booking._id %>?_method=PUT" method="POST" class="needs-validation"
+                    novalidate>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-uppercase text-muted">Check-in</label>
+                            <input type="date" name="booking[checkIn]" class="form-control"
+                                value="<%= booking.checkIn.toISOString().split('T')[0] %>" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-uppercase text-muted">Check-out</label>
+                            <input type="date" name="booking[checkOut]" class="form-control"
+                                value="<%= booking.checkOut.toISOString().split('T')[0] %>" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-uppercase text-muted">Guests</label>
+                        <select name="booking[guests]" class="form-select">
+                            <option value="1" <%=booking.guests===1 ? 'selected' : '' %>>1 guest</option>
+                            <option value="2" <%=booking.guests===2 ? 'selected' : '' %>>2 guests</option>
+                            <option value="3" <%=booking.guests===3 ? 'selected' : '' %>>3 guests</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-danger w-100 py-2 fw-bold" style="background: #ff385c;">Update
+                        Booking</button>
+                </form>
+            </div>
+        </div>
+    </div>
