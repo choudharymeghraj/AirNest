@@ -25,8 +25,10 @@ const bookingRouter = require("./routes/booking.js");
 // Razorpay verification dependencies
 const crypto = require("crypto");
 
-const dbUrl = process.env.ATLASDB_URL;
 const MONGO_URL = "mongodb://127.0.0.1:27017/airnest";
+const dbUrl = (process.env.ATLASDB_URL && !process.env.ATLASDB_URL.includes("xxxxx"))
+    ? process.env.ATLASDB_URL
+    : MONGO_URL;
 
 const connectDB = require("./config/db");
 connectDB();
