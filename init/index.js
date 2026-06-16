@@ -25,17 +25,24 @@ const initDB = async () => {
       console.log("No user found. Please create a user first.");
       return;
     }
+    const categories = [
+      "Farms",
+      "Rooms",
+      "Amazing views",
+      "Iconic cities",
+      "Surfing",
+      "Amazing pools",
+      "Beach",
+      "Cabins",
+      "OMG!",
+      "Lakefront",
+    ];
+
     initData.data = initData.data.map((obj) => ({
       ...obj,
       owner: user._id,
-      image: {
-        filename: "listingimage",
-        url: obj.image,
-      },
-      category: "Rooms",
+      category: categories[Math.floor(Math.random() * categories.length)],
       reviews: [],
-      location: obj.address,
-      country: "United States", // Default country
     }));
     await Listing.insertMany(initData.data);
     console.log("data was initialized");

@@ -3,7 +3,7 @@
   <div class="container mt-3">
 
     <div class="row mt-3 mb-3">
-      <div class="col-8 offset-2">
+      <div class="col-12">
         <h3 class="fw-bold fs-2">
           <%= listing.title %>
         </h3>
@@ -14,177 +14,219 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-8 offset-2">
+    <!-- Image and Booking Card Side by Side -->
+    <div class="row mb-4">
+      <div class="col-lg-7">
         <div class="card listing-card shadow-none border-0">
           <img src="<%= listing.image.url %>" class="card-img-top rounded-4 w-100" alt="listing_image"
             style="height: 450px; object-fit: cover;">
         </div>
       </div>
+
+      <!-- Booking Card Column -->
+      <div class="col-lg-5">
+        <div class="booking-card-wrapper">
+          <div class="card shadow border-0 rounded-3 p-3 position-sticky" style="top: 100px;">
+            <div class="d-flex justify-content-between align-items-baseline mb-3">
+              <div>
+                <span class="fs-4 fw-bold">&#8377;<%= listing.price.toLocaleString("en-IN") %></span>
+                <span class="text-muted small"> night</span>
+              </div>
+              <div class="text-muted" style="font-size: 0.875rem;">
+                <i class="fas fa-star text-warning"></i> 4.8 &middot; <u>
+                  <%= listing.reviews.length %> reviews
+                </u>
+              </div>
+            </div>
+
+            <form action="/listings/<%= listing._id %>/book" method="POST">
+              <div class="border rounded-3 mb-2 overflow-hidden">
+                <div class="d-flex border-bottom">
+                  <div class="p-2 w-50 border-end">
+                    <label class="small fw-bold text-uppercase d-block text-muted"
+                      style="font-size: 0.65rem;">Check-in</label>
+                    <input type="date" name="booking[checkIn]" class="form-control border-0 p-0 shadow-none" style="font-size: 0.875rem;" required>
+                  </div>
+                  <div class="p-2 w-50">
+                    <label class="small fw-bold text-uppercase d-block text-muted"
+                      style="font-size: 0.65rem;">Check-out</label>
+                    <input type="date" name="booking[checkOut]" class="form-control border-0 p-0 shadow-none" style="font-size: 0.875rem;" required>
+                  </div>
+                </div>
+                <div class="p-2">
+                  <label class="small fw-bold text-uppercase d-block text-muted" style="font-size: 0.65rem;">Guests</label>
+                  <select name="booking[guests]" class="form-select border-0 p-0 shadow-none text-dark" style="font-size: 0.875rem;">
+                    <option value="1">1 guest</option>
+                    <option value="2">2 guests</option>
+                    <option value="3">3 guests</option>
+                  </select>
+                </div>
+              </div>
+
+              <button class="btn btn-danger w-100 py-2 fw-semibold rounded-3" style="background: #ff385c; font-size: 1rem;">Reserve</button>
+              <div class="text-center mt-2"><small class="text-muted" style="font-size: 0.8rem;">You won't be charged yet</small></div>
+
+              <div class="mt-3 pt-2 border-top">
+                <div class="d-flex justify-content-between mb-2" style="font-size: 0.875rem;">
+                  <span class="text-decoration-underline">&#8377;<%= listing.price %> x 5 nights</span>
+                  <span>&#8377;<%= (listing.price * 5).toLocaleString("en-IN") %></span>
+                </div>
+                <div class="d-flex justify-content-between mb-2" style="font-size: 0.875rem;">
+                  <span class="text-decoration-underline">Service fee</span>
+                  <span>&#8377;2,500</span>
+                </div>
+                <hr class="my-2">
+                <div class="d-flex justify-content-between fw-bold" style="font-size: 1rem;">
+                  <span>Total</span>
+                  <span>&#8377;<%= (listing.price * 5 + 2500).toLocaleString("en-IN") %></span>
+                </div>
+              </div>
+            </form>
+
+            <% if(currUser && listing.owner && currUser._id.equals(listing.owner._id)) { %>
+              <div class="mt-3 pt-2 border-top text-center">
+                <p class="text-muted small mb-2">Owner Controls</p>
+                <a href="/listings/<%= listing._id %>/edit" class="btn btn-outline-dark btn-sm me-2">Edit</a>
+                <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" class="d-inline">
+                  <button class="btn btn-outline-danger btn-sm">Delete</button>
+                </form>
+              </div>
+              <% } %>
+
+          </div>
+        </div>
+      </div>
     </div>
 
+    <!-- Description and Details Section -->
     <div class="row mt-4">
+      <div class="col-lg-7">
 
-      <div class="col-md-6 offset-md-2">
-
-        <div class="d-flex align-items-center justify-content-between border-bottom pb-4 mb-4">
+        <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
           <div>
-            <h5 class="fw-bold">Hosted by <%= listing.owner.username %>
-            </h5>
-            <p class="text-muted mb-0">Superhost &middot; 2 years hosting</p>
+            <h5 class="fw-bold mb-1">Hosted by <%= listing.owner.username %></h5>
+            <p class="text-muted mb-0 small">Superhost &middot; 2 years hosting</p>
           </div>
           <div class="bg-dark text-white rounded-circle d-flex justify-content-center align-items-center"
-            style="width: 50px; height: 50px; font-size: 1.5rem;">
+            style="width: 48px; height: 48px; font-size: 1.3rem;">
             <%= listing.owner.username.charAt(0).toUpperCase() %>
           </div>
         </div>
 
-        <div class="mb-4 border-bottom pb-4">
-          <p class="lead text-dark" style="font-size: 1rem; line-height: 1.6;">
+        <div class="mb-4 pb-3 border-bottom">
+          <p class="text-dark mb-0" style="font-size: 0.95rem; line-height: 1.65;">
             <%= listing.description %>
           </p>
         </div>
 
-        <div class="mb-5 border-bottom pb-4">
-          <h5 class="fw-bold mb-3">What this place offers</h5>
+        <div class="mb-4 pb-3 border-bottom">
+          <h5 class="fw-bold mb-3" style="font-size: 1.1rem;">What this place offers</h5>
           <div class="row">
-            <div class="col-6 mb-2"><i class="fas fa-wifi me-3 text-muted"></i> Wifi</div>
-            <div class="col-6 mb-2"><i class="fas fa-car me-3 text-muted"></i> Free parking</div>
-            <div class="col-6 mb-2"><i class="fas fa-tv me-3 text-muted"></i> TV</div>
-            <div class="col-6 mb-2"><i class="fas fa-paw me-3 text-muted"></i> Pets allowed</div>
+            <div class="col-md-6 mb-2"><i class="fas fa-wifi me-2 text-muted"></i> <span style="font-size: 0.95rem;">Wifi</span></div>
+            <div class="col-md-6 mb-2"><i class="fas fa-car me-2 text-muted"></i> <span style="font-size: 0.95rem;">Free parking</span></div>
+            <div class="col-md-6 mb-2"><i class="fas fa-tv me-2 text-muted"></i> <span style="font-size: 0.95rem;">TV</span></div>
+            <div class="col-md-6 mb-2"><i class="fas fa-paw me-2 text-muted"></i> <span style="font-size: 0.95rem;">Pets allowed</span></div>
           </div>
         </div>
 
         <% if(currUser) { %>
-          <div class="mb-4">
-            <h4 class="fw-bold">Leave a Review</h4>
-            <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate class="needs-validation mt-3">
+          <div class="mb-4 pb-3 border-bottom">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <i class="fas fa-star text-warning fs-5"></i>
+              <h5 class="fw-bold mb-0" style="font-size: 1.1rem;">Leave a Review</h5>
+            </div>
+            <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate class="needs-validation">
               <div class="mb-3">
-                <label for="rating" class="form-label">Rating</label>
-                <fieldset class="starability-slot">
-                  <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked
+                <fieldset class="starability-fade">
+                  <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked
                     aria-label="No rating." />
                   <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-                  <label for="first-rate1" title="Terrible">1 star</label>
+                  <label for="first-rate1" title="Terrible">1</label>
                   <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-                  <label for="first-rate2" title="Not good">2 stars</label>
+                  <label for="first-rate2" title="Not good">2</label>
                   <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-                  <label for="first-rate3" title="Average">3 stars</label>
+                  <label for="first-rate3" title="Average">3</label>
                   <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-                  <label for="first-rate4" title="Very good">4 stars</label>
+                  <label for="first-rate4" title="Very good">4</label>
                   <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-                  <label for="first-rate5" title="Amazing">5 stars</label>
+                  <label for="first-rate5" title="Amazing">5</label>
                 </fieldset>
               </div>
               <div class="mb-3">
-                <label for="comment" class="form-label">Comments</label>
-                <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control"
-                  required></textarea>
+                <label for="comment" class="form-label fw-semibold mb-2" style="font-size: 0.9rem;">Comments</label>
+                <textarea name="review[comment]" id="comment" cols="30" rows="3" class="form-control review-textarea"
+                  placeholder="Share your experience with this listing..." required></textarea>
                 <div class="invalid-feedback">Please submit some comments for review</div>
               </div>
-              <button class="btn btn-outline-dark">Submit</button>
+              <button class="btn btn-outline-dark px-4 py-2 fw-semibold rounded-pill">Submit</button>
             </form>
           </div>
-          <% } %>
-
-            <% if(listing.reviews.length> 0) { %>
-              <hr>
-              <div class="row">
-                <p><b>All Reviews</b></p>
-                <% for(review of listing.reviews) { %>
-                  <div class="card col-5 ms-3 mb-3 border-0 bg-light p-3 rounded-3">
-                    <div class="card-body">
-                      <h5 class="card-title fw-bold">@<%= review.author.username %>
-                      </h5>
-                      <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
-                      <p class="card-text">
-                        <%= review.comment %>
-                      </p>
-                      <% if(currUser && currUser._id.equals(review.author._id)) {%>
-                        <form class="mb-3" method="POST"
-                          action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
-                          <button class="btn btn-sm btn-dark">Delete</button>
-                        </form>
-                        <% } %>
-                    </div>
-                  </div>
-                  <% } %>
+          <% } else { %>
+            <div class="mb-4 pb-3 border-bottom">
+              <div class="d-flex align-items-center gap-2 mb-3">
+                <i class="fas fa-star text-warning fs-5"></i>
+                <h5 class="fw-bold mb-0" style="font-size: 1.1rem;">Leave a Review</h5>
               </div>
-              <% } %>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card shadow border-0 rounded-4 p-4 position-sticky" style="top: 100px;">
-          <div class="d-flex justify-content-between align-items-baseline mb-4">
-            <div>
-              <span class="fs-3 fw-bold">&#8377;<%= listing.price.toLocaleString("en-IN") %></span>
-              <span class="text-muted"> night</span>
-            </div>
-            <div class="text-muted fs-6">
-              <i class="fas fa-star text-warning"></i> 4.8 &middot; <u>
-                <%= listing.reviews.length %> reviews
-              </u>
-            </div>
-          </div>
-
-          <form action="/listings/<%= listing._id %>/book" method="POST">
-            <div class="border rounded-3 mb-3 overflow-hidden">
-              <div class="d-flex border-bottom">
-                <div class="p-2 w-50 border-end">
-                  <label class="small fw-bold text-uppercase d-block text-muted"
-                    style="font-size: 0.7rem;">Check-in</label>
-                  <input type="date" name="booking[checkIn]" class="form-control border-0 p-0 shadow-none" required>
-                </div>
-                <div class="p-2 w-50">
-                  <label class="small fw-bold text-uppercase d-block text-muted"
-                    style="font-size: 0.7rem;">Check-out</label>
-                  <input type="date" name="booking[checkOut]" class="form-control border-0 p-0 shadow-none" required>
-                </div>
+              <div class="login-cta-box">
+                <p class="mb-3 text-muted">Log in to leave a review.</p>
+                <a href="/login" class="btn btn-outline-primary px-4 py-2 rounded-pill fw-semibold">Go to Login</a>
               </div>
-              <div class="p-2">
-                <label class="small fw-bold text-uppercase d-block text-muted" style="font-size: 0.7rem;">Guests</label>
-                <select name="booking[guests]" class="form-select border-0 p-0 shadow-none text-dark">
-                  <option value="1">1 guest</option>
-                  <option value="2">2 guests</option>
-                  <option value="3">3 guests</option>
-                </select>
-              </div>
-            </div>
-
-            <button class="btn btn-danger w-100 py-3 fw-bold rounded-3" style="background: #ff385c;">Reserve</button>
-            <div class="text-center mt-3"><small class="text-muted">You won't be charged yet</small></div>
-
-            <div class="mt-4 pt-3 border-top">
-              <div class="d-flex justify-content-between mb-2">
-                <span class="text-decoration-underline">&#8377;<%= listing.price %> x 5 nights</span>
-                <span>&#8377;<%= (listing.price * 5).toLocaleString("en-IN") %></span>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                <span class="text-decoration-underline">Service fee</span>
-                <span>&#8377;2,500</span>
-              </div>
-              <hr>
-              <div class="d-flex justify-content-between fw-bold fs-5">
-                <span>Total before taxes</span>
-                <span>&#8377;<%= (listing.price * 5 + 2500).toLocaleString("en-IN") %></span>
-              </div>
-            </div>
-          </form>
-
-          <% if(currUser && listing.owner && currUser._id.equals(listing.owner._id)) { %>
-            <div class="mt-4 pt-3 border-top text-center">
-              <p class="text-muted small">Owner Controls</p>
-              <a href="/listings/<%= listing._id %>/edit" class="btn btn-outline-dark btn-sm me-2">Edit</a>
-              <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" class="d-inline">
-                <button class="btn btn-outline-danger btn-sm">Delete</button>
-              </form>
             </div>
             <% } %>
 
-        </div>
+              <% if(listing.reviews.length> 0) { %>
+                <div class="reviews-section">
+                  <div class="d-flex align-items-center gap-2 mb-3">
+                    <i class="fas fa-comments text-info fs-5"></i>
+                    <h5 class="fw-bold mb-0" style="font-size: 1.1rem;">All Reviews (<%= listing.reviews.length %>)</h5>
+                  </div>
+
+                  <div class="row">
+                    <% for(review of listing.reviews) { %>
+                      <div class="col-12 mb-2">
+                        <div class="review-card">
+                          <div class="d-flex justify-content-between align-items-start">
+                            <div class="d-flex gap-3">
+                              <div class="review-avatar">
+                                <%= review.author.username.charAt(0).toUpperCase() %>
+                              </div>
+                              <div>
+                                <h6 class="review-author-name mb-1">
+                                  <%= review.author.username %>
+                                </h6>
+                                <small class="text-muted d-block">Verified Guest</small>
+                                <p class="starability-result mt-1 mb-0" data-rating="<%= review.rating %>"></p>
+                              </div>
+                            </div>
+                            <% if(currUser && currUser._id.equals(review.author._id)) {%>
+                              <form method="POST"
+                                action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                                <button class="btn-delete-review">
+                                  <i class="fas fa-trash-alt me-1"></i> Delete
+                                </button>
+                              </form>
+                              <% } %>
+                          </div>
+                          <p class="review-comment mt-2 mb-0">
+                            <%= review.comment %>
+                          </p>
+                        </div>
+                      </div>
+                      <% } %>
+                  </div>
+                </div>
+                <% } else { %>
+                  <div class="reviews-section">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                      <i class="fas fa-comments text-info fs-5"></i>
+                      <h5 class="fw-bold mb-0" style="font-size: 1.1rem;">All Reviews (0)</h5>
+                    </div>
+                    <div class="text-center py-4 empty-reviews">
+                      <p class="text-muted mb-0">No reviews yet. Be the first to review!</p>
+                    </div>
+                  </div>
+                  <% } %>
       </div>
     </div>
-
-
 
   </div>
