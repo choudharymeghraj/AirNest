@@ -40,8 +40,8 @@
                                             </div>
                                             <div class="d-flex justify-content-between mb-2">
                                                 <span class="text-muted">Total Price</span>
-                                                <span class="fw-bold text-danger">&#8377; <%=
-                                                        booking.totalPrice.toLocaleString("en-IN") %></span>
+                                                <span class="fw-bold text-danger">&#8377; <%= booking.totalPrice ?
+                                                        booking.totalPrice.toLocaleString("en-IN") : 'N/A' %></span>
                                             </div>
                                             <div class="mb-3">
                                                 <span class="badge bg-success">

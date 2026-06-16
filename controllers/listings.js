@@ -1,21 +1,20 @@
 const Listing = require("../models/listing");
 
 
+const { extractKeywords } = require("../utils/aiSearch");
+
 module.exports.index = async (req, res) => {
     const { category, search } = req.query;
     let alllistings;
     if (category) {
         alllistings = await Listing.find({ category: category });
     } else if (search) {
-        const regex = new RegExp(search, 'i'); // Case-insensitive regex
-        alllistings = await Listing.find({
-            $or: [
-                { title: regex },
-                { description: regex },
-                { location: regex },
-                { country: regex }
-            ]
-        });
+        const query = extractKeywords(search);
+        if (query) {
+            alllistings = await Listing.find(query);
+        } else {
+            alllistings = await Listing.find({});
+        }
     } else {
         alllistings = await Listing.find({});
     }

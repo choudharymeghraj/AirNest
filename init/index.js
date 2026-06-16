@@ -3,7 +3,7 @@ const initData = require("./data.js");
 const Listing = require("../models/listing.js");
 const User = require("../models/user.js");
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const MONGO_URL = "mongodb://127.0.0.1:27017/airnest";
 
 main()
   .then(() => {
@@ -20,10 +20,12 @@ async function main() {
 const initDB = async () => {
   try {
     await Listing.deleteMany({});
-    const user = await User.findOne({});
+    let user = await User.findOne({});
     if (!user) {
-      console.log("No user found. Please create a user first.");
-      return;
+      console.log("No user found. Creating a new user...");
+      const newUser = new User({ email: "admin@airnest.com", username: "admin" });
+      user = await User.register(newUser, "admin123");
+      console.log("New user created:", user.username);
     }
     const categories = [
       "Farms",

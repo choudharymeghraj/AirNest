@@ -1,0 +1,299 @@
+<% layout('/layouts/boilerplate') %>
+
+<div class="container my-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">
+        <i class="fas fa-calendar-check text-primary"></i> My Bookings
+      </h2>
+      <p class="text-muted mb-0">Manage your upcoming and past reservations</p>
+    </div>
+    <% if(bookings.length > 0) { %>
+      <span class="badge bg-primary rounded-pill px-3 py-2 fs-6">
+        <%= bookings.length %> Booking<%= bookings.length !== 1 ? 's' : '' %>
+      </span>
+    <% } %>
+  </div>
+
+  <% if(bookings.length > 0) { %>
+    <div class="row">
+      <% for(let booking of bookings) { %>
+        <% if(booking.listing) { %>
+        <div class="col-lg-6 col-xl-4 mb-4">
+          <div class="card booking-card shadow-sm h-100 border-0 overflow-hidden">
+            
+            <!-- Status Banner -->
+            <div class="position-absolute top-0 end-0 m-3" style="z-index: 10;">
+              <% if(booking.bookingStatus === 'confirmed' && booking.paymentStatus === 'completed') { %>
+                <span class="badge bg-success px-3 py-2 shadow-sm">
+                  <i class="fas fa-check-circle"></i> Confirmed
+                </span>
+              <% } else if(booking.bookingStatus === 'cancelled') { %>
+                <span class="badge bg-danger px-3 py-2 shadow-sm">
+                  <i class="fas fa-times-circle"></i> Cancelled
+                </span>
+              <% } else { %>
+                <span class="badge bg-warning text-dark px-3 py-2 shadow-sm">
+                  <i class="fas fa-clock"></i> Pending
+                </span>
+              <% } %>
+            </div>
+
+            <!-- Booking Image -->
+            <% if(booking.listing.image && booking.listing.image.url) { %>
+              <div class="position-relative">
+                <img src="<%= booking.listing.image.url %>" class="card-img-top" alt="<%= booking.listing.title %>"
+                  style="height: 200px; object-fit: cover;">
+                <div class="image-overlay"></div>
+              </div>
+            <% } %>
+
+            <div class="card-body">
+              <!-- Title -->
+              <h5 class="card-title fw-bold mb-2" style="color: #222;">
+                <%= booking.listing.title %>
+              </h5>
+
+              <!-- Location -->
+              <p class="text-muted small mb-3">
+                <i class="fas fa-map-marker-alt text-danger"></i>
+                <%= booking.listing.location %>, <%= booking.listing.country %>
+              </p>
+
+              <!-- Date Range -->
+              <div class="booking-dates mb-3 p-3 bg-light rounded-3">
+                <div class="row g-2">
+                  <div class="col-6">
+                    <small class="text-muted d-block" style="font-size: 0.75rem; text-transform: uppercase;">Check-in</small>
+                    <p class="mb-0 fw-semibold" style="font-size: 0.95rem;">
+                      <%= new Date(booking.checkIn).toLocaleDateString('en-IN', { 
+                        day: 'numeric', 
+                        month: 'short',
+                        year: 'numeric'
+                      }) %>
+                    </p>
+                  </div>
+                  <div class="col-6 border-start">
+                    <small class="text-muted d-block" style="font-size: 0.75rem; text-transform: uppercase;">Check-out</small>
+                    <p class="mb-0 fw-semibold" style="font-size: 0.95rem;">
+                      <%= new Date(booking.checkOut).toLocaleDateString('en-IN', { 
+                        day: 'numeric', 
+                        month: 'short',
+                        year: 'numeric'
+                      }) %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Nights and Guests -->
+              <div class="row mb-3">
+                <div class="col-6">
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-moon text-primary me-2"></i>
+                    <div>
+                      <small class="text-muted d-block" style="font-size: 0.75rem;">Nights</small>
+                      <p class="mb-0 fw-semibold"><%= booking.nights %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-users text-primary me-2"></i>
+                    <div>
+                      <small class="text-muted d-block" style="font-size: 0.75rem;">Guests</small>
+                      <p class="mb-0 fw-semibold"><%= booking.guests %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Price -->
+              <div class="mb-3 p-3 rounded-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="d-flex justify-content-between align-items-center text-white">
+                  <div>
+                    <small class="d-block opacity-75" style="font-size: 0.75rem;">Total Amount</small>
+                    <p class="mb-0 fs-4 fw-bold">₹<%= booking.totalPrice.toLocaleString('en-IN') %></p>
+                  </div>
+                  <% if(booking.paymentStatus === 'completed') { %>
+                    <div class="text-end">
+                      <i class="fas fa-check-circle fa-2x"></i>
+                      <small class="d-block mt-1">Paid</small>
+                    </div>
+                  <% } else { %>
+                    <div class="text-end">
+                      <i class="fas fa-exclamation-circle fa-2x"></i>
+                      <small class="d-block mt-1">Unpaid</small>
+                    </div>
+                  <% } %>
+                </div>
+              </div>
+
+              <!-- Booking ID -->
+              <small class="text-muted d-block mb-3" style="font-size: 0.7rem;">
+                Booking ID: <%= booking._id.toString().slice(-8).toUpperCase() %>
+              </small>
+
+              <!-- Actions -->
+              <div class="d-grid gap-2">
+                <a href="/listings/<%= booking.listing._id %>" class="btn btn-outline-primary">
+                  <i class="fas fa-eye me-2"></i>View Listing
+                </a>
+                
+                <% if(booking.bookingStatus === 'confirmed') { %>
+                  <form method="POST" action="/bookings/<%= booking._id %>/cancel" 
+                    onsubmit="return confirm('Are you sure you want to cancel this booking?')">
+                    <button class="btn btn-outline-danger w-100">
+                      <i class="fas fa-times-circle me-2"></i>Cancel Booking
+                    </button>
+                  </form>
+                <% } %>
+              </div>
+
+            </div>
+
+            <!-- Card Footer with Booking Date -->
+            <div class="card-footer bg-white border-top text-center py-2">
+              <small class="text-muted">
+                <i class="fas fa-clock me-1"></i>
+                Booked on <%= new Date(booking.createdAt).toLocaleDateString('en-IN', { 
+                  day: 'numeric', 
+                  month: 'long', 
+                  year: 'numeric' 
+                }) %>
+              </small>
+            </div>
+
+          </div>
+        </div>
+        <% } %>
+      <% } %>
+    </div>
+
+  <% } else { %>
+    
+    <!-- Enhanced Empty State -->
+    <div class="empty-state text-center py-5 my-5">
+      <div class="empty-state-icon mb-4">
+        <i class="fas fa-calendar-times" style="font-size: 5rem; color: #e0e0e0;"></i>
+      </div>
+      <h3 class="fw-bold mb-3" style="color: #222;">No Bookings Yet</h3>
+      <p class="text-muted mb-4 mx-auto" style="max-width: 500px;">
+        You haven't made any reservations yet. Start exploring amazing places and book your next adventure today!
+      </p>
+      <a href="/listings" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm">
+        <i class="fas fa-search me-2"></i>Explore Listings
+      </a>
+      
+      <!-- Feature Cards -->
+      <div class="row mt-5 text-start">
+        <div class="col-md-4 mb-3">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+              <i class="fas fa-home fa-3x text-primary mb-3"></i>
+              <h5 class="fw-bold">Unique Stays</h5>
+              <p class="text-muted small mb-0">Find the perfect place to stay</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+              <i class="fas fa-shield-alt fa-3x text-success mb-3"></i>
+              <h5 class="fw-bold">Secure Payments</h5>
+              <p class="text-muted small mb-0">Safe and encrypted transactions</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+              <i class="fas fa-headset fa-3x text-info mb-3"></i>
+              <h5 class="fw-bold">24/7 Support</h5>
+              <p class="text-muted small mb-0">We're here to help anytime</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <% } %>
+
+</div>
+
+<style>
+/* Booking Card Styles */
+.booking-card {
+  transition: all 0.3s ease;
+}
+
+.booking-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.1) 100%);
+}
+
+.booking-dates {
+  border-left: 4px solid #667eea;
+}
+
+/* Empty State Animation */
+.empty-state-icon i {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .booking-card img {
+    height: 180px !important;
+  }
+  
+  .empty-state-icon i {
+    font-size: 4rem !important;
+  }
+}
+
+/* Badge animations */
+.badge {
+  animation: fadeInDown 0.5s ease;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Button hover effects */
+.btn-outline-primary:hover {
+  transform: scale(1.02);
+  transition: all 0.2s ease;
+}
+
+.btn-outline-danger:hover {
+  transform: scale(1.02);
+  transition: all 0.2s ease;
+}
+</style>

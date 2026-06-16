@@ -33,52 +33,81 @@
                 <span class="text-muted small"> night</span>
               </div>
               <div class="text-muted" style="font-size: 0.875rem;">
-                <i class="fas fa-star text-warning"></i> 4.8 &middot; <u>
-                  <%= listing.reviews.length %> reviews
-                </u>
+                <% if(listing.reviews.length> 0) { %>
+                  <% const avgRating=(listing.reviews.reduce((sum, r)=> sum + r.rating, 0) /
+                    listing.reviews.length).toFixed(1); %>
+                    <i class="fas fa-star text-warning"></i>
+                    <%= avgRating %> &middot;
+                      <% } %>
+                        <u>
+                          <%= listing.reviews.length %> reviews
+                        </u>
               </div>
             </div>
 
-            <form action="/listings/<%= listing._id %>/book" method="POST">
+            <form action="/listings/<%= listing._id %>/book" method="GET">
               <div class="border rounded-3 mb-2 overflow-hidden">
                 <div class="d-flex border-bottom">
                   <div class="p-2 w-50 border-end">
                     <label class="small fw-bold text-uppercase d-block text-muted"
                       style="font-size: 0.65rem;">Check-in</label>
-                    <input type="date" name="booking[checkIn]" class="form-control border-0 p-0 shadow-none" style="font-size: 0.875rem;" required>
+                    <input type="date" name="checkIn" id="checkInDate" class="form-control border-0 p-0 shadow-none"
+                      style="font-size: 0.875rem;" min="<%= new Date().toISOString().split('T')[0] %>" required>
                   </div>
                   <div class="p-2 w-50">
                     <label class="small fw-bold text-uppercase d-block text-muted"
                       style="font-size: 0.65rem;">Check-out</label>
-                    <input type="date" name="booking[checkOut]" class="form-control border-0 p-0 shadow-none" style="font-size: 0.875rem;" required>
+                    <input type="date" name="checkOut" id="checkOutDate" class="form-control border-0 p-0 shadow-none"
+                      style="font-size: 0.875rem;" min="<%= new Date().toISOString().split('T')[0] %>" required>
                   </div>
                 </div>
-                <div class="p-2">
-                  <label class="small fw-bold text-uppercase d-block text-muted" style="font-size: 0.65rem;">Guests</label>
-                  <select name="booking[guests]" class="form-select border-0 p-0 shadow-none text-dark" style="font-size: 0.875rem;">
+                <div class="p-2 border-top">
+                  <label class="small fw-bold text-uppercase d-block text-muted"
+                    style="font-size: 0.65rem;">Nights</label>
+                  <input type="number" name="nights" id="nightsInput" class="form-control border-0 p-0 shadow-none"
+                    style="font-size: 0.875rem; background-color: #f8f9fa;" value="1" min="1" readonly>
+                  <small class="text-muted" style="font-size: 0.7rem;">Auto-calculated</small>
+                </div>
+                <div class="p-2 border-top">
+                  <label class="small fw-bold text-uppercase d-block text-muted"
+                    style="font-size: 0.65rem;">Guests</label>
+                  <select name="guests" class="form-select border-0 p-0 shadow-none text-dark"
+                    style="font-size: 0.875rem;">
                     <option value="1">1 guest</option>
                     <option value="2">2 guests</option>
                     <option value="3">3 guests</option>
+                    <option value="4">4 guests</option>
+                    <option value="5">5 guests</option>
+                    <option value="6">6 guests</option>
                   </select>
                 </div>
               </div>
 
-              <button class="btn btn-danger w-100 py-2 fw-semibold rounded-3" style="background: #ff385c; font-size: 1rem;">Reserve</button>
-              <div class="text-center mt-2"><small class="text-muted" style="font-size: 0.8rem;">You won't be charged yet</small></div>
+              <button type="submit" class="btn btn-danger w-100 py-2 fw-semibold rounded-3"
+                style="background: #ff385c; font-size: 1rem;">
+                Reserve
+              </button>
+              <div class="text-center mt-2">
+                <small class="text-muted" style="font-size: 0.8rem;">You won't be charged yet</small>
+              </div>
 
               <div class="mt-3 pt-2 border-top">
                 <div class="d-flex justify-content-between mb-2" style="font-size: 0.875rem;">
-                  <span class="text-decoration-underline">&#8377;<%= listing.price %> x 5 nights</span>
-                  <span>&#8377;<%= (listing.price * 5).toLocaleString("en-IN") %></span>
+                  <span class="text-decoration-underline">
+                    &#8377;<%= listing.price.toLocaleString("en-IN") %> x <span id="nightsDisplay">1</span> night<span
+                        id="nightsPlural"></span>
+                  </span>
+                  <span id="nightsPriceDisplay">&#8377;<%= listing.price.toLocaleString("en-IN") %></span>
                 </div>
-                <div class="d-flex justify-content-between mb-2" style="font-size: 0.875rem;">
-                  <span class="text-decoration-underline">Service fee</span>
-                  <span>&#8377;2,500</span>
+                <div class="d-flex justify-content-between mb-2 text-success" style="font-size: 0.875rem;">
+                  <span class="text-decoration-underline">GST (18%)</span>
+                  <span id="taxDisplay">&#8377;<%= Math.round(listing.price * 0.18).toLocaleString("en-IN") %></span>
                 </div>
                 <hr class="my-2">
                 <div class="d-flex justify-content-between fw-bold" style="font-size: 1rem;">
                   <span>Total</span>
-                  <span>&#8377;<%= (listing.price * 5 + 2500).toLocaleString("en-IN") %></span>
+                  <span id="totalPriceDisplay">&#8377;<%= Math.round(listing.price * 1.18).toLocaleString("en-IN") %>
+                  </span>
                 </div>
               </div>
             </form>
@@ -92,7 +121,6 @@
                 </form>
               </div>
               <% } %>
-
           </div>
         </div>
       </div>
@@ -104,12 +132,13 @@
 
         <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
           <div>
-            <h5 class="fw-bold mb-1">Hosted by <%= listing.owner.username %></h5>
+            <h5 class="fw-bold mb-1">Hosted by <%= listing.owner ? listing.owner.username : 'Unknown Host' %>
+            </h5>
             <p class="text-muted mb-0 small">Superhost &middot; 2 years hosting</p>
           </div>
           <div class="bg-dark text-white rounded-circle d-flex justify-content-center align-items-center"
             style="width: 48px; height: 48px; font-size: 1.3rem;">
-            <%= listing.owner.username.charAt(0).toUpperCase() %>
+            <%= listing.owner ? listing.owner.username.charAt(0).toUpperCase() : 'U' %>
           </div>
         </div>
 
@@ -122,111 +151,253 @@
         <div class="mb-4 pb-3 border-bottom">
           <h5 class="fw-bold mb-3" style="font-size: 1.1rem;">What this place offers</h5>
           <div class="row">
-            <div class="col-md-6 mb-2"><i class="fas fa-wifi me-2 text-muted"></i> <span style="font-size: 0.95rem;">Wifi</span></div>
-            <div class="col-md-6 mb-2"><i class="fas fa-car me-2 text-muted"></i> <span style="font-size: 0.95rem;">Free parking</span></div>
-            <div class="col-md-6 mb-2"><i class="fas fa-tv me-2 text-muted"></i> <span style="font-size: 0.95rem;">TV</span></div>
-            <div class="col-md-6 mb-2"><i class="fas fa-paw me-2 text-muted"></i> <span style="font-size: 0.95rem;">Pets allowed</span></div>
+            <div class="col-md-6 mb-2"><i class="fas fa-wifi me-2 text-muted"></i> <span
+                style="font-size: 0.95rem;">Wifi</span></div>
+            <div class="col-md-6 mb-2"><i class="fas fa-car me-2 text-muted"></i> <span style="font-size: 0.95rem;">Free
+                parking</span></div>
+            <div class="col-md-6 mb-2"><i class="fas fa-tv me-2 text-muted"></i> <span
+                style="font-size: 0.95rem;">TV</span></div>
+            <div class="col-md-6 mb-2"><i class="fas fa-paw me-2 text-muted"></i> <span style="font-size: 0.95rem;">Pets
+                allowed</span></div>
           </div>
         </div>
 
-        <% if(currUser) { %>
-          <div class="mb-4 pb-3 border-bottom">
+        <!-- ========== ALL REVIEWS SECTION ========== -->
+        <% if(listing.reviews.length> 0) { %>
+          <div class="reviews-section mb-4 pb-3 border-bottom">
             <div class="d-flex align-items-center gap-2 mb-3">
-              <i class="fas fa-star text-warning fs-5"></i>
-              <h5 class="fw-bold mb-0" style="font-size: 1.1rem;">Leave a Review</h5>
+              <i class="fas fa-comments text-info fs-5"></i>
+              <h5 class="fw-bold mb-0" style="font-size: 1.1rem;">All Reviews (<%= listing.reviews.length %>)</h5>
             </div>
-            <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate class="needs-validation">
-              <div class="mb-3">
-                <fieldset class="starability-fade">
-                  <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked
-                    aria-label="No rating." />
-                  <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-                  <label for="first-rate1" title="Terrible">1</label>
-                  <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-                  <label for="first-rate2" title="Not good">2</label>
-                  <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-                  <label for="first-rate3" title="Average">3</label>
-                  <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-                  <label for="first-rate4" title="Very good">4</label>
-                  <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-                  <label for="first-rate5" title="Amazing">5</label>
-                </fieldset>
-              </div>
-              <div class="mb-3">
-                <label for="comment" class="form-label fw-semibold mb-2" style="font-size: 0.9rem;">Comments</label>
-                <textarea name="review[comment]" id="comment" cols="30" rows="3" class="form-control review-textarea"
-                  placeholder="Share your experience with this listing..." required></textarea>
-                <div class="invalid-feedback">Please submit some comments for review</div>
-              </div>
-              <button class="btn btn-outline-dark px-4 py-2 fw-semibold rounded-pill">Submit</button>
-            </form>
-          </div>
-          <% } else { %>
-            <div class="mb-4 pb-3 border-bottom">
-              <div class="d-flex align-items-center gap-2 mb-3">
-                <i class="fas fa-star text-warning fs-5"></i>
-                <h5 class="fw-bold mb-0" style="font-size: 1.1rem;">Leave a Review</h5>
-              </div>
-              <div class="login-cta-box">
-                <p class="mb-3 text-muted">Log in to leave a review.</p>
-                <a href="/login" class="btn btn-outline-primary px-4 py-2 rounded-pill fw-semibold">Go to Login</a>
-              </div>
-            </div>
-            <% } %>
 
-              <% if(listing.reviews.length> 0) { %>
-                <div class="reviews-section">
-                  <div class="d-flex align-items-center gap-2 mb-3">
-                    <i class="fas fa-comments text-info fs-5"></i>
-                    <h5 class="fw-bold mb-0" style="font-size: 1.1rem;">All Reviews (<%= listing.reviews.length %>)</h5>
-                  </div>
+            <!-- Average Rating Box -->
+            <% const totalRating=listing.reviews.reduce((sum, r)=> sum + r.rating, 0);
+              const avgRatingCalc = totalRating / listing.reviews.length;
+              %>
 
-                  <div class="row">
-                    <% for(review of listing.reviews) { %>
-                      <div class="col-12 mb-2">
-                        <div class="review-card">
-                          <div class="d-flex justify-content-between align-items-start">
-                            <div class="d-flex gap-3">
-                              <div class="review-avatar">
-                                <%= review.author.username.charAt(0).toUpperCase() %>
-                              </div>
-                              <div>
-                                <h6 class="review-author-name mb-1">
-                                  <%= review.author.username %>
-                                </h6>
-                                <small class="text-muted d-block">Verified Guest</small>
-                                <p class="starability-result mt-1 mb-0" data-rating="<%= review.rating %>"></p>
-                              </div>
-                            </div>
-                            <% if(currUser && currUser._id.equals(review.author._id)) {%>
-                              <form method="POST"
-                                action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
-                                <button class="btn-delete-review">
-                                  <i class="fas fa-trash-alt me-1"></i> Delete
-                                </button>
-                              </form>
-                              <% } %>
-                          </div>
-                          <p class="review-comment mt-2 mb-0">
-                            <%= review.comment %>
-                          </p>
-                        </div>
-                      </div>
-                      <% } %>
-                  </div>
+              <div class="average-rating-box">
+                <div class="average-rating-number">
+                  <%= avgRatingCalc.toFixed(1) %>
                 </div>
-                <% } else { %>
-                  <div class="reviews-section">
-                    <div class="d-flex align-items-center gap-2 mb-3">
-                      <i class="fas fa-comments text-info fs-5"></i>
-                      <h5 class="fw-bold mb-0" style="font-size: 1.1rem;">All Reviews (0)</h5>
-                    </div>
-                    <div class="text-center py-4 empty-reviews">
-                      <p class="text-muted mb-0">No reviews yet. Be the first to review!</p>
+                <div class="average-rating-stars">
+                  <% for(let i=1; i <=5; i++) { %>
+                    <span class="star <%= i <= Math.round(avgRatingCalc) ? 'filled' : '' %>">★</span>
+                    <% } %>
+                </div>
+                <div class="total-reviews-text">
+                  Based on <%= listing.reviews.length %> review<%= listing.reviews.length !==1 ? 's' : '' %>
+                </div>
+              </div>
+
+              <!-- Individual Reviews -->
+              <div class="row">
+                <% for(review of listing.reviews) { %>
+                  <div class="col-12 mb-2">
+                    <div class="review-card">
+                      <div class="d-flex justify-content-between align-items-start">
+                        <div class="d-flex gap-3">
+                          <div class="review-avatar">
+                            <%= review.author.username.charAt(0).toUpperCase() %>
+                          </div>
+                          <div>
+                            <h6 class="review-author-name mb-1">
+                              <%= review.author.username %>
+                            </h6>
+                            <small class="text-muted d-block">Verified Guest</small>
+
+                            <!-- Display Stars for Review -->
+                            <div class="review-stars">
+                              <% for(let i=1; i <=5; i++) { %>
+                                <span class="star <%= i <= review.rating ? 'filled' : '' %>">★</span>
+                                <% } %>
+                            </div>
+                          </div>
+                        </div>
+                        <% if(currUser && currUser._id.equals(review.author._id)) {%>
+                          <form method="POST"
+                            action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                            <button class="btn-delete-review">
+                              <i class="fas fa-trash-alt me-1"></i> Delete
+                            </button>
+                          </form>
+                          <% } %>
+                      </div>
+                      <p class="review-comment mt-2 mb-0">
+                        <%= review.comment %>
+                      </p>
                     </div>
                   </div>
                   <% } %>
+              </div>
+          </div>
+          <% } %>
+
+            <!-- ========== LEAVE A REVIEW FORM ========== -->
+            <% if(currUser) { %>
+              <div class="mb-4 pb-3 border-bottom">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                  <i class="fas fa-star text-warning fs-5"></i>
+                  <h5 class="fw-bold mb-0" style="font-size: 1.1rem;">Leave a Review</h5>
+                </div>
+                <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate class="needs-validation">
+
+                  <!-- Custom Star Rating Input -->
+                  <div class="mb-3">
+                    <label class="form-label fw-semibold mb-2" style="font-size: 0.9rem;">Rating</label>
+                    <div class="star-rating-input">
+                      <input type="radio" id="star5" name="review[rating]" value="5" required>
+                      <label for="star5" class="star" title="Excellent">★</label>
+
+                      <input type="radio" id="star4" name="review[rating]" value="4">
+                      <label for="star4" class="star" title="Very Good">★</label>
+
+                      <input type="radio" id="star3" name="review[rating]" value="3">
+                      <label for="star3" class="star" title="Good">★</label>
+
+                      <input type="radio" id="star2" name="review[rating]" value="2">
+                      <label for="star2" class="star" title="Fair">★</label>
+
+                      <input type="radio" id="star1" name="review[rating]" value="1">
+                      <label for="star1" class="star" title="Poor">★</label>
+                    </div>
+                    <div class="rating-feedback"></div>
+                    <div class="invalid-feedback">Please select a rating</div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="comment" class="form-label fw-semibold mb-2" style="font-size: 0.9rem;">Comments</label>
+                    <textarea name="review[comment]" id="comment" cols="30" rows="3"
+                      class="form-control review-textarea" placeholder="Share your experience with this listing..."
+                      required></textarea>
+                    <div class="invalid-feedback">Please submit some comments for review</div>
+                  </div>
+                  <button class="btn btn-outline-dark px-4 py-2 fw-semibold rounded-pill">Submit</button>
+                </form>
+              </div>
+              <% } else { %>
+                <div class="mb-4 pb-3 border-bottom">
+                  <div class="d-flex align-items-center gap-2 mb-3">
+                    <i class="fas fa-star text-warning fs-5"></i>
+                    <h5 class="fw-bold mb-0" style="font-size: 1.1rem;">Leave a Review</h5>
+                  </div>
+                  <div class="login-cta-box">
+                    <p class="mb-3 text-muted">Log in to leave a review.</p>
+                    <a href="/login" class="btn btn-outline-primary px-4 py-2 rounded-pill fw-semibold">Go to Login</a>
+                  </div>
+                </div>
+                <% } %>
+
+                  <!-- Empty State (if no reviews) -->
+                  <% if(listing.reviews.length===0) { %>
+                    <div class="text-center py-4 empty-reviews border-bottom mb-4 pb-3">
+                      <i class="fas fa-comments text-muted fs-1 mb-3"></i>
+                      <p class="text-muted mb-0">No reviews yet. Be the first to review!</p>
+                    </div>
+                    <% } %>
+
       </div>
     </div>
 
   </div>
+
+  <script>
+    // Booking price calculation
+    const pricePerNight = `<%= listing.price %>`;
+    const taxRate = 0.18;
+
+    const checkInInput = document.getElementById('checkInDate');
+    const checkOutInput = document.getElementById('checkOutDate');
+    const nightsInput = document.getElementById('nightsInput');
+    const nightsDisplay = document.getElementById('nightsDisplay');
+    const nightsPlural = document.getElementById('nightsPlural');
+    const nightsPriceDisplay = document.getElementById('nightsPriceDisplay');
+    const taxDisplay = document.getElementById('taxDisplay');
+    const totalPriceDisplay = document.getElementById('totalPriceDisplay');
+
+    // Calculate nights between dates
+    function calculateNights() {
+      if (!checkInInput.value || !checkOutInput.value) return 1;
+
+      const checkIn = new Date(checkInInput.value);
+      const checkOut = new Date(checkOutInput.value);
+      const diffTime = checkOut - checkIn;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      return diffDays > 0 ? diffDays : 1;
+    }
+
+    function updatePrice() {
+      const nights = calculateNights();
+      nightsInput.value = nights;
+
+      const nightsPrice = pricePerNight * nights;
+      const subtotal = nightsPrice;
+      const tax = Math.round(subtotal * taxRate);
+      const total = subtotal + tax;
+
+      nightsDisplay.textContent = nights;
+      nightsPlural.textContent = nights > 1 ? 's' : '';
+      nightsPriceDisplay.textContent = '₹' + nightsPrice.toLocaleString('en-IN');
+      taxDisplay.textContent = '₹' + tax.toLocaleString('en-IN');
+      totalPriceDisplay.textContent = '₹' + total.toLocaleString('en-IN');
+    }
+
+    // Update checkout min date when checkin changes
+    if (checkInInput && checkOutInput) {
+      // Force date picker to open on click for the entire box
+      [checkInInput, checkOutInput].forEach(input => {
+        const container = input.parentElement;
+        if (container) {
+          container.style.cursor = 'pointer';
+          container.addEventListener('click', (e) => {
+            // Avoid conflict if the browser natively handles the input click
+            // But usually we want to force showPicker() for consistency
+            try {
+              input.showPicker();
+              input.focus();
+            } catch (error) {
+              console.log('showPicker not supported');
+            }
+          });
+        }
+      });
+
+      checkInInput.addEventListener('change', function () {
+        if (this.value) {
+          const minCheckOut = new Date(this.value);
+          minCheckOut.setDate(minCheckOut.getDate() + 1);
+          checkOutInput.min = minCheckOut.toISOString().split('T')[0];
+
+          // If checkout is before new minimum, update it
+          if (checkOutInput.value && checkOutInput.value <= this.value) {
+            checkOutInput.value = checkOutInput.min;
+          }
+        }
+        updatePrice();
+      });
+
+      checkOutInput.addEventListener('change', updatePrice);
+    }
+
+    // Star rating feedback
+    document.addEventListener('DOMContentLoaded', function () {
+      const ratingInputs = document.querySelectorAll('.star-rating-input input[type="radio"]');
+      const ratingFeedback = document.querySelector('.rating-feedback');
+
+      if (ratingInputs.length > 0 && ratingFeedback) {
+        const labels = {
+          '1': 'Poor',
+          '2': 'Fair',
+          '3': 'Good',
+          '4': 'Very Good',
+          '5': 'Excellent'
+        };
+
+        ratingInputs.forEach(input => {
+          input.addEventListener('change', function () {
+            ratingFeedback.textContent = labels[this.value];
+          });
+        });
+      }
+    });
+  </script>

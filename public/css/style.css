@@ -15,15 +15,17 @@ body {
 }
 
 body {
-  font-family: "Plus Jakarta Sans", sans-serif !important;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background-color: #ffffff;
+  color: #222222;
+  line-height: 1.43;
 }
 
 /* =====================================================
-   Bootstrap Row Fix (LEFT ALIGNMENT FIX)
+   Bootstrap Row Fix
 ===================================================== */
 .row {
   margin-left: 0 !important;
@@ -31,13 +33,12 @@ body {
 }
 
 /* =====================================================
-   Main Container (Balanced & Compact)
+   Main Container
 ===================================================== */
 .container {
   flex: 1;
   max-width: 100%;
   padding: 1.25rem 3rem;
-  /* ⬅ reduced top padding */
 }
 
 /* Tablet */
@@ -55,32 +56,38 @@ body {
 }
 
 /* =====================================================
-   Navbar
+   Navbar - Airbnb Style
 ===================================================== */
 .navbar {
   height: 5rem;
   background-color: #ffffff;
-  padding: 0 1.25rem;
+  padding: 0 2.5rem;
+  border-bottom: 1px solid #ebebeb;
 }
 
 .fa-compass {
-  color: #fe424d;
+  color: #ff385c;
   font-size: 2rem;
 }
 
 .navbar-brand {
   font-weight: 600;
-  letter-spacing: 0.01em;
+  font-size: 1.375rem;
+  letter-spacing: -0.02em;
+  color: #ff385c !important;
 }
 
 .nav-link {
   color: #222222 !important;
   font-weight: 500;
+  font-size: 0.875rem;
   padding: 0.5rem 0.75rem;
+  border-radius: 24px;
+  transition: background-color 0.2s ease;
 }
 
 .nav-link:hover {
-  color: #fe424d !important;
+  background-color: #f7f7f7;
 }
 
 /* =====================================================
@@ -102,35 +109,43 @@ body {
 
 .search-input {
   width: 100%;
-  border-radius: 25px !important;
+  border-radius: 40px !important;
   padding: 0.7rem 1.5rem !important;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   border: 1px solid #dddddd;
+  transition: all 0.2s ease;
 }
 
 .search-input:focus {
-  border-color: #cdcdcd;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-color: #222222;
+  box-shadow: 0 0 0 2px rgba(34, 34, 34, 0.1);
+  outline: none;
 }
 
 .search-btn-primary {
-  border-radius: 25px !important;
-  background-color: #ff385c !important;
+  border-radius: 40px !important;
+  background: linear-gradient(to right, #e61e4d 0%, #e31c5f 50%, #d70466 100%) !important;
   color: #ffffff !important;
-  padding: 0.7rem 1.25rem !important;
+  padding: 0.7rem 1.5rem !important;
   border: none !important;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.875rem;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
   white-space: nowrap;
+  transition: transform 0.1s ease;
 }
 
 .search-btn-primary:hover {
-  background-color: #d93b53 !important;
+  transform: scale(1.04);
 }
 
 @media (max-width: 768px) {
+  .navbar {
+    padding: 0 1.5rem;
+  }
+
   .nav-search {
     max-width: 100%;
     margin: 0;
@@ -138,18 +153,17 @@ body {
 }
 
 /* =====================================================
-   Listing Filters (GAP REDUCED)
+   Listing Filters - Airbnb Style
 ===================================================== */
 .listing-filters {
   position: sticky;
   top: 0;
   z-index: 900;
   background-color: #ffffff;
-  padding: 0.5rem 0;
-  /* ⬅ reduced */
-  margin-bottom: 0.75rem;
-  /* ⬅ tighter gap */
+  padding: 0.75rem 0;
+  margin-bottom: 1.5rem;
   max-width: 100%;
+  border-bottom: 1px solid #ebebeb;
 }
 
 .filters-container {
@@ -158,12 +172,7 @@ body {
 }
 
 .filters-actions {
-  gap: 0.75rem !important;
-}
-
-/* Divider under filters */
-.listing-filters hr {
-  margin: 0.5rem 0;
+  gap: 1rem !important;
 }
 
 @media (max-width: 991px) {
@@ -173,21 +182,22 @@ body {
 }
 
 /* =====================================================
-   Category Scroller
+   Category Scroller - Airbnb Style
 ===================================================== */
 .category-scroller {
   flex: 1 1 auto;
   min-width: 0;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .category-row {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem;
   padding: 0 0.5rem;
   max-width: 100%;
   scrollbar-width: thin;
-  scrollbar-color: #cfcfcf transparent;
+  scrollbar-color: #dddddd transparent;
 }
 
 .category-row::-webkit-scrollbar {
@@ -195,18 +205,18 @@ body {
 }
 
 .category-row::-webkit-scrollbar-thumb {
-  background-color: #cfcfcf;
-  border-radius: 4px;
+  background-color: #dddddd;
+  border-radius: 3px;
 }
 
 .category-item {
-  min-width: 64px;
-  color: #5a5a5a;
+  min-width: 70px;
+  color: #717171;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem 0.35rem 0.35rem;
+  gap: 0.375rem;
+  padding: 0.5rem 0.5rem 0.75rem;
   border-bottom: 2px solid transparent;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -214,78 +224,130 @@ body {
 }
 
 .category-item i {
-  font-size: 1.05rem;
+  font-size: 1.5rem;
 }
 
 .category-item small {
   font-size: 0.75rem;
+  font-weight: 600;
 }
 
-.category-item:hover,
+.category-item:hover {
+  color: #222222;
+  border-bottom-color: #dddddd;
+}
+
 .category-item.active {
-  color: #ff5a5f;
-  border-bottom-color: #ff5a5f;
+  color: #222222;
+  border-bottom-color: #222222;
 }
 
 /* =====================================================
-   Listings / Cards
+   Listing Cards - Airbnb Style
 ===================================================== */
 .listing-card {
   border: none !important;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  cursor: pointer;
+  transition: transform 0.15s ease;
 }
 
-/* Remove extra top gap before first row */
+.listing-card:hover {
+  transform: translateY(-2px);
+}
+
 .container>.row:first-child {
   margin-top: 0 !important;
 }
 
 .card-img-top {
   width: 100% !important;
-  border-radius: 1rem !important;
+  height: 300px !important;
+  border-radius: 12px !important;
   object-fit: cover !important;
 }
 
 .card-body {
-  padding: 0 !important;
+  padding: 0.75rem 0 !important;
 }
 
 .card-img-overlay {
   opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .card:hover .card-img-overlay {
-  opacity: 0.2;
-  background-color: #ffffff;
+  opacity: 0.08;
+  background-color: #000000;
+  border-radius: 12px;
+}
+
+.listing-card .card-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #222222;
+  margin-bottom: 0.25rem;
+}
+
+.listing-card .text-muted {
+  font-size: 0.875rem;
+  color: #717171 !important;
+}
+
+.listing-card .fw-semibold {
+  font-size: 0.9375rem;
+  font-weight: 600;
 }
 
 /* =====================================================
-   Buttons
+   Buttons - Airbnb Style
 ===================================================== */
 .add-btn,
-.save-btn {
-  background-color: #fe424d !important;
-  border-color: #fe424d !important;
+.save-btn,
+.btn-primary {
+  background: linear-gradient(to right, #e61e4d 0%, #e31c5f 50%, #d70466 100%) !important;
+  border: none !important;
   color: #ffffff !important;
+  font-weight: 600;
+  padding: 0.875rem 1.5rem !important;
+  border-radius: 8px !important;
+  transition: transform 0.1s ease;
 }
 
 .add-btn:hover,
-.save-btn:hover {
-  background-color: #e33a3d !important;
-  border-color: #e33a3d !important;
+.save-btn:hover,
+.btn-primary:hover {
+  transform: scale(1.02);
+}
+
+.btn-outline-secondary {
+  border: 1px solid #222222 !important;
+  color: #222222 !important;
+  font-weight: 600;
+  padding: 0.875rem 1.5rem !important;
+  border-radius: 8px !important;
+  background-color: #ffffff !important;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #f7f7f7 !important;
+  border-color: #000000 !important;
 }
 
 /* =====================================================
-   Tax Toggle
+   Tax Toggle - Airbnb Style
 ===================================================== */
 .tax-toggle {
-  border: 1px solid #dddddd;
+  border: 1px solid #b0b0b0;
   border-radius: 12px;
-  padding: 0.7rem 1rem;
+  padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
   background-color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .tax-toggle:hover {
@@ -294,80 +356,142 @@ body {
 }
 
 .tax-toggle label {
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #222222;
+  cursor: pointer;
+  user-select: none;
+}
+
+.form-check-input {
+  cursor: pointer;
+}
+
+.form-check-input:checked {
+  background-color: #222222;
+  border-color: #222222;
 }
 
 /* =====================================================
-   Footer
+   Footer - Airbnb Style
 ===================================================== */
 footer {
   margin-top: auto;
+  border-top: 1px solid #ebebeb;
+  background-color: #f7f7f7;
 }
 
 .f-info {
-  background-color: #f2f2f2;
-  text-align: center;
-  padding: 1.25rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 0;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
+}
+
+.f-info-left,
+.f-info-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.f-info-left {
+  font-size: 0.875rem;
+  color: #222222;
 }
 
 .f-info-links a {
-  color: #222222;
+  color: #222222 !important;
   text-decoration: none;
-  margin: 0 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
 }
 
 .f-info-links a:hover {
   text-decoration: underline;
 }
 
-.f-info-social {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
+.dot {
+  margin: 0 0.25rem;
 }
 
-.f-info-social i {
-  font-size: 1.1rem;
-  color: #222222;
-}
-
-.f-info-brand {
+.f-info-right {
   font-weight: 500;
+  font-size: 0.875rem;
   color: #222222;
 }
 
+.f-info-socials {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: 1rem;
+}
+
+.f-info-socials i {
+  font-size: 1.125rem;
+  color: #222222;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.f-info-socials i:hover {
+  color: #717171;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .f-info {
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.5rem 0;
+  }
+
+  .f-info-left,
+  .f-info-right {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .f-info-socials {
+    margin-left: 0;
+  }
+}
+
 /* =====================================================
-   Review Section Styling
-===================================================== */
-/* =====================================================
-   Review Section Styling - Updated
+   Review Section - Airbnb Style
 ===================================================== */
 .reviews-section {
-  margin-top: 0;
-  padding-top: 0;
+  margin-top: 3rem;
+  padding-top: 3rem;
+  border-top: 1px solid #ebebeb;
 }
 
 .review-textarea {
-  border: 1px solid #e0e0e0;
+  border: 1px solid #b0b0b0;
   border-radius: 12px;
   padding: 1rem;
   font-size: 1rem;
   resize: none;
-  background-color: #f7f7f7;
+  background-color: #ffffff;
   transition: all 0.2s;
 }
 
 .review-textarea:focus {
-  background-color: #fff;
-  border-color: #222;
-  box-shadow: 0 0 0 1px #222;
+  background-color: #ffffff;
+  border-color: #222222;
+  box-shadow: 0 0 0 2px rgba(34, 34, 34, 0.1);
+  outline: none;
 }
 
 .review-header-icon {
   font-size: 1.5rem;
-  color: #ffc107;
-  /* Star color */
+  color: #ff385c;
 }
 
 .review-card {
@@ -383,11 +507,6 @@ footer {
   border-bottom: none;
 }
 
-.review-card:hover {
-  transform: none;
-  box-shadow: none;
-}
-
 .review-avatar {
   width: 48px;
   height: 48px;
@@ -397,42 +516,51 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 600;
   flex-shrink: 0;
+  text-transform: uppercase;
 }
 
 .review-author-name {
   font-weight: 600;
   margin-bottom: 0.25rem;
   font-size: 1rem;
+  color: #222222;
+}
+
+.review-date {
+  font-size: 0.875rem;
+  color: #717171;
 }
 
 .review-comment {
-  color: #484848;
-  line-height: 1.6;
-  font-size: 0.95rem;
+  color: #222222;
+  line-height: 1.5;
+  font-size: 0.9375rem;
+  margin-top: 0.5rem;
 }
 
 .btn-delete-review {
   background: transparent;
-  border: 1px solid #e0e0e0;
-  color: #484848;
+  border: 1px solid #dddddd;
+  color: #222222;
   padding: 0.5rem 1rem;
   border-radius: 8px;
   font-size: 0.875rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .btn-delete-review:hover {
   background: #f7f7f7;
-  border-color: #222;
+  border-color: #222222;
 }
 
 .login-cta-box {
   background-color: #f7f7f7;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #ebebeb;
   border-radius: 12px;
   padding: 2.5rem 1.5rem;
   text-align: center;
@@ -441,23 +569,16 @@ footer {
 
 .login-cta-box p {
   font-size: 1rem;
-  color: #484848;
+  color: #222222;
   font-weight: 500;
 }
 
 .stars-icon {
   color: #ffc107;
-  font-size: 1.8rem;
-  margin-right: 0.5rem;
-}
-
-.chat-icon {
-  color: #008489;
   font-size: 1.5rem;
   margin-right: 0.5rem;
 }
 
-/* Empty State */
 .empty-reviews {
   text-align: center;
   padding: 3rem 1rem;
@@ -466,25 +587,11 @@ footer {
   border-radius: 12px;
 }
 
-/* Starability Fade Override to match yellow stars if needed, but default is usually good.
-   Ensure input-no-rate is hidden correctly.
-*/
-.starability-fade>input:checked~label,
-.starability-fade>input:hover~label {
-  color: #ffc107;
-}
-
-/* Helper for alignment */
-.d-flex.align-items-center.gap-2.mb-4 h4,
-.d-flex.align-items-center.gap-2.mb-4 h5 {
-  margin-bottom: 0;
-}
-
 /* =====================================================
-   Booking Card Styling
+   Booking Card - Airbnb Style
 ===================================================== */
 .booking-card-wrapper {
-  padding-left: 1rem;
+  padding-left: 2rem;
 }
 
 @media (max-width: 991px) {
@@ -496,37 +603,369 @@ footer {
 
 .booking-card-wrapper .card {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12) !important;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #dddddd !important;
+  border-radius: 12px !important;
+  position: sticky;
+  top: 6rem;
 }
 
 .booking-card-wrapper .card:hover {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
 }
 
+.booking-card-wrapper .card-body {
+  padding: 1.5rem !important;
+}
+
 /* =====================================================
-   Starability Customization
+   Starability - Airbnb Style Stars
 ===================================================== */
-/* Hide all text inside fieldset that shouldn't show */
-fieldset.starability-fade > legend {
-  display: none !important;
-  position: absolute !important;
-  width: 0 !important;
-  height: 0 !important;
-  overflow: hidden !important;
-}
-
-/* Hide the text of labels, show only the star icons */
-fieldset.starability-fade > label {
-  font-size: 0 !important;
-  color: transparent !important;
-  text-indent: -9999px !important;
-}
-
-/* Ensure proper star rendering */
 fieldset.starability-fade {
   display: inline-flex !important;
-  gap: 2px !important;
+  gap: 4px !important;
   padding: 0 !important;
   margin: 0 !important;
   border: none !important;
+  background: transparent !important;
+}
+
+fieldset.starability-fade>legend {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+}
+
+fieldset.starability-fade>input {
+  position: absolute !important;
+  left: -9999px !important;
+  opacity: 0 !important;
+}
+
+fieldset.starability-fade>label {
+  font-size: 0 !important;
+  line-height: 0 !important;
+  text-indent: -9999px !important;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  position: relative;
+}
+
+fieldset.starability-fade>label::before {
+  content: '★';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 28px;
+  height: 28px;
+  font-size: 24px;
+  line-height: 28px;
+  text-align: center;
+  text-indent: 0;
+  color: #e0e0e0;
+  transition: color 0.2s ease;
+}
+
+fieldset.starability-fade>label:hover::before {
+  color: #ffc107;
+}
+
+fieldset.starability-fade>input:checked~label::before {
+  color: #ffc107;
+}
+
+/* =====================================================
+   Utility Classes
+===================================================== */
+.text-danger {
+  color: #ff385c !important;
+}
+
+.fw-bold {
+  font-weight: 700 !important;
+}
+
+.fw-semibold {
+  font-weight: 600 !important;
+}
+
+/* Link hover effect */
+a {
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #ff385c;
+}
+/* Star Rating Input - Fixed */
+.star-rating-input {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    gap: 5px;
+    font-size: 2.5rem;
+}
+
+.star-rating-input input[type="radio"] {
+    display: none;
+}
+
+.star-rating-input label.star {
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.star-rating-input label.star:hover,
+.star-rating-input label.star:hover ~ label.star {
+    color: #ffc107;
+}
+
+.star-rating-input input[type="radio"]:checked ~ label.star {
+    color: #ffc107;
+}
+
+/* Review Stars Display */
+.review-stars {
+    font-size: 1.3rem;
+}
+
+.review-stars .star.filled {
+    color: #ffc107;
+}
+
+.review-stars .star.empty {
+    color: #ddd;
+}
+
+/* Average Rating Box */
+.average-rating-box {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.average-rating-number {
+    font-size: 3.5rem;
+    font-weight: bold;
+}
+
+.average-rating-stars {
+    font-size: 2rem;
+    margin: 10px 0;
+}
+
+.average-rating-stars .star {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.average-rating-stars .star.filled {
+    color: #ffc107;
+}
+
+.total-reviews-text {
+    font-size: 1rem;
+}
+
+/* Review Card */
+.review-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.review-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.reviewer-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.rating-text {
+    min-height: 24px;
+    font-size: 1rem;
+}
+/* ========== STAR RATING SYSTEM ========== */
+
+/* Star Rating Input - Fixed Order */
+.star-rating-input {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    gap: 5px;
+    font-size: 2.5rem;
+    unicode-bidi: bidi-override;
+}
+
+.star-rating-input input[type="radio"] {
+    display: none;
+}
+
+.star-rating-input label.star {
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+    position: relative;
+}
+
+/* Hover effect - lights up current and previous stars */
+.star-rating-input label.star:hover,
+.star-rating-input label.star:hover ~ label.star {
+    color: #ffc107 !important;
+}
+
+/* Selected state - lights up current and previous stars */
+.star-rating-input input[type="radio"]:checked ~ label.star {
+    color: #ffc107 !important;
+}
+
+/* Review Stars Display (Read-only) */
+.review-stars {
+    font-size: 1.3rem;
+    display: inline-flex;
+    gap: 2px;
+}
+
+.review-stars .star {
+    color: #ddd;
+}
+
+.review-stars .star.filled {
+    color: #ffc107;
+}
+
+.review-stars .star.empty {
+    color: #ddd;
+}
+
+/* Average Rating Box */
+.average-rating-box {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+    margin-bottom: 30px;
+}
+
+.average-rating-number {
+    font-size: 4rem;
+    font-weight: bold;
+    line-height: 1;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.average-rating-stars {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.average-rating-stars .star {
+    color: rgba(255, 255, 255, 0.3);
+    margin: 0 3px;
+}
+
+.average-rating-stars .star.filled {
+    color: #ffc107;
+    text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+}
+
+.total-reviews-text {
+    font-size: 1.1rem;
+    opacity: 0.95;
+}
+
+/* Review Card Styling */
+.review-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: #fff;
+    transition: all 0.3s ease;
+}
+
+.review-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.reviewer-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.reviewer-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.review-comment {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333;
+    margin-top: 12px;
+    margin-bottom: 10px;
+}
+
+.review-date {
+    font-size: 0.875rem;
+    color: #999;
+}
+
+/* Leave Review Section */
+.leave-review-section {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 12px;
+    margin-top: 30px;
+}
+
+.rating-feedback {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffc107;
+    min-height: 24px;
+    margin-top: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .star-rating-input {
+        font-size: 2rem;
+    }
+
+    .average-rating-number {
+        font-size: 3rem;
+    }
+
+    .average-rating-stars {
+        font-size: 1.5rem;
+    }
 }
