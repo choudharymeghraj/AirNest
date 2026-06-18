@@ -20,17 +20,14 @@
 
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 
-      <!-- Centered Magic Search Bar (Desktop) -->
+      <!-- Centered Search Bar (Desktop) -->
       <div class="mx-auto d-none d-lg-block" style="max-width: 480px; width: 100%;">
         <form class="search-form" role="search" action="/listings" method="GET">
-          <div class="input-group magic-search-container">
-            <div class="magic-icon-wrapper">
-              <i class="fas fa-magic text-warning"></i>
-            </div>
-            <input class="form-control search-input magic-input" type="search" name="search"
-              placeholder="Try 'romantic cabin' or 'quiet workspace'..." aria-label="Search"
+          <div class="search-container">
+            <input class="form-control search-input" type="search" name="search"
+              placeholder="Search destinations..." aria-label="Search"
               value="<%= typeof search !== 'undefined' ? search : '' %>">
-            <button class="btn btn-primary search-btn magic-btn" type="submit">
+            <button class="btn search-btn" type="submit">
               <i class="fas fa-search"></i>
             </button>
           </div>
@@ -152,30 +149,61 @@
     position: relative;
   }
 
-  .search-input {
-    border-radius: 50px;
-    padding: 0.6rem 1.2rem;
+  .search-container {
+    display: flex;
+    align-items: center;
+    background: white;
     border: 1px solid #ddd;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
+    border-radius: 50px;
+    padding: 6px 8px 6px 16px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
   }
 
-  .search-input:focus {
-    border-color: #ff385c;
-    box-shadow: 0 0 0 3px rgba(255, 56, 92, 0.1);
+  .search-container:hover, .search-container:focus-within {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.08);
+    border-color: #ccc;
+  }
+
+  .search-input {
+    flex: 1;
+    border: none !important;
+    padding: 0 !important;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #222;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .search-input::placeholder {
+    color: #717171;
+    font-weight: 400;
   }
 
   .search-btn {
-    border-radius: 50px;
+    border-radius: 50% !important;
     background: #ff385c;
     border: none;
-    padding: 0.6rem 1.5rem;
-    transition: all 0.3s ease;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: all 0.2s ease;
+    margin-left: 8px;
   }
 
   .search-btn:hover {
     background: #e31c5f;
     transform: scale(1.05);
+  }
+
+  .search-btn i {
+    font-size: 0.85rem;
   }
 
   /* Nav Links */
@@ -321,76 +349,7 @@
     font-weight: bold;
   }
 
-  /* Magic Search Styles */
-  .magic-search-container {
-    position: relative;
-    background: white;
-    border-radius: 50px;
-    padding: 3px;
-    background: linear-gradient(90deg, #ff385c, #d9068d, #ff385c, #ff9a9e);
-    background-size: 300% 100%;
-    animation: gradientMove 6s ease infinite;
-    box-shadow: 0 4px 15px rgba(255, 56, 92, 0.15);
-    display: flex;
-    align-items: center;
-  }
-
-  @keyframes gradientMove {
-    0% {
-      background-position: 0% 50%;
-    }
-
-    50% {
-      background-position: 100% 50%;
-    }
-
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-
-  .magic-input {
-    border: none !important;
-    border-radius: 50px !important;
-    padding-left: 2.8rem !important;
-    /* Space for icon */
-    background: white;
-    box-shadow: none !important;
-  }
-
-  .magic-icon-wrapper {
-    position: absolute;
-    left: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    pointer-events: none;
-    font-size: 1.1rem;
-    animation: sparkle 2s infinite;
-  }
-
-  @keyframes sparkle {
-
-    0%,
-    100% {
-      transform: translateY(-50%) scale(1);
-      opacity: 1;
-    }
-
-    50% {
-      transform: translateY(-50%) scale(1.2);
-      opacity: 0.8;
-    }
-  }
-
-  .magic-btn {
-    border-radius: 50px !important;
-    margin: 0;
-    margin-left: -5px;
-    z-index: 5;
-    height: 100%;
-    padding: 0.6rem 1.5rem;
-  }
+  /* Magic styles removed to keep search bar normal */
 </style>
 
 <script>

@@ -39,8 +39,19 @@ const listingSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
     ref: "User",
+  },
+  maxGuests: {
+    type: Number,
+    default: 4,
+  },
+  amenities: {
+    type: [String],
+    default: ["Wifi", "Air conditioning", "Kitchen"],
+  },
+  rating: {
+    type: Number,
+    default: 4.5,
   }
-
 });
 listingSchema.post("findOneAndDelete", async (listing) => {
   if (listing) {

@@ -39,6 +39,540 @@
 
     <%- include("../includes/footer.ejs") %>
 
+    <!-- AirNest Concierge Floating Chat Widget -->
+    <div id="concierge-widget" class="concierge-widget">
+      <!-- Toggle Button -->
+      <button id="concierge-toggle-btn" class="concierge-toggle-btn" aria-label="Toggle Concierge Chat">
+        <i class="fas fa-concierge-bell"></i>
+      </button>
+
+      <!-- Chat Panel -->
+      <div id="concierge-panel" class="concierge-panel d-none">
+        <div class="concierge-header">
+          <div class="concierge-avatar">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div class="concierge-title-block">
+            <h6 class="concierge-title mb-0">AirNest Concierge</h6>
+            <span class="concierge-status"><span class="status-dot"></span> Online</span>
+          </div>
+          <button id="concierge-close-btn" class="concierge-close-btn" aria-label="Close Chat">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <!-- Messages Container -->
+        <div id="concierge-messages" class="concierge-messages">
+          <div class="message system-message">
+            👋 Hello! I am your <strong>AirNest Concierge</strong>. I can help you find the perfect stay based on your location, budget, guest count, and desired vibe. Try asking me or click one of the suggestions below!
+          </div>
+        </div>
+
+        <!-- Suggestions/Chips Container -->
+        <div class="concierge-suggestions-container">
+          <div class="concierge-chips">
+            <button class="concierge-chip" data-query="Find a beachfront villa under ₹5000">🌴 Beachfront under ₹5000</button>
+            <button class="concierge-chip" data-query="I need a pet-friendly place for 4 guests">🐾 Pet-friendly for 4 guests</button>
+            <button class="concierge-chip" data-query="Where is a good spot for remote work?">💻 Remote work spot</button>
+          </div>
+        </div>
+
+        <!-- Input Form -->
+        <form id="concierge-input-form" class="concierge-input-form">
+          <input type="text" id="concierge-input" placeholder="Ask the Concierge..." required autocomplete="off" />
+          <button type="submit" class="concierge-send-btn">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <style>
+      /* Floating Widget styles */
+      .concierge-widget {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 9999;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+
+      .concierge-toggle-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ff385c 0%, #e61e4d 100%);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 16px rgba(255, 56, 92, 0.4);
+        font-size: 1.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .concierge-toggle-btn:hover {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 6px 20px rgba(255, 56, 92, 0.6);
+      }
+
+      .concierge-toggle-btn:active {
+        transform: scale(0.95);
+      }
+
+      .concierge-panel {
+        position: absolute;
+        bottom: 80px;
+        right: 0;
+        width: 380px;
+        height: 520px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        animation: slideUp 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .concierge-header {
+        background: linear-gradient(135deg, #222222 0%, #333333 100%);
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .concierge-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #ff385c;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        box-shadow: 0 2px 8px rgba(255, 56, 92, 0.4);
+      }
+
+      .concierge-title-block {
+        flex: 1;
+      }
+
+      .concierge-title {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 700;
+        letter-spacing: -0.2px;
+      }
+
+      .concierge-status {
+        font-size: 0.75rem;
+        color: #a0a0a0;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 2px;
+      }
+
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #4ade80;
+        display: inline-block;
+      }
+
+      .concierge-close-btn {
+        background: transparent;
+        border: none;
+        color: #d1d1d1;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        padding: 5px;
+      }
+
+      .concierge-close-btn:hover {
+        color: white;
+      }
+
+      .concierge-messages {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .message {
+        max-width: 85%;
+        padding: 12px 16px;
+        border-radius: 16px;
+        font-size: 0.9rem;
+        line-height: 1.45;
+      }
+
+      .system-message {
+        background: white;
+        color: #484848;
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .user-message {
+        background: #ff385c;
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 4px;
+        box-shadow: 0 2px 8px rgba(255, 56, 92, 0.2);
+      }
+
+      .concierge-suggestions-container {
+        padding: 10px 15px;
+        background: white;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .concierge-chips {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .concierge-chip {
+        background: #fff5f7;
+        color: #ff385c;
+        border: 1px solid #ffe3e8;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: left;
+        transition: all 0.2s ease;
+        width: 100%;
+      }
+
+      .concierge-chip:hover {
+        background: #ff385c;
+        color: white;
+        border-color: #ff385c;
+        transform: translateX(3px);
+      }
+
+      .concierge-input-form {
+        display: flex;
+        padding: 12px 15px;
+        background: white;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        gap: 10px;
+        align-items: center;
+      }
+
+      .concierge-input-form input {
+        flex: 1;
+        border: 1px solid #ddd;
+        padding: 10px 16px;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.2s ease;
+      }
+
+      .concierge-input-form input:focus {
+        border-color: #ff385c;
+      }
+
+      .concierge-send-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #ff385c;
+        color: white;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s ease;
+      }
+
+      .concierge-send-btn:hover {
+        background-color: #e31c5f;
+      }
+
+      /* typing bubble */
+      .typing-bubble {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        padding: 12px 16px;
+        background: white;
+        border-radius: 16px;
+        border-bottom-left-radius: 4px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        align-self: flex-start;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .typing-dot {
+        width: 6px;
+        height: 6px;
+        background: #ff385c;
+        border-radius: 50%;
+        animation: typing 1s infinite alternate;
+      }
+
+      .typing-dot:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      .typing-dot:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes typing {
+        from {
+          opacity: 0.3;
+          transform: translateY(0);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(-4px);
+        }
+      }
+
+      /* Formatting inside chat */
+      .chat-md-content h6 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #222;
+        margin-top: 10px;
+        margin-bottom: 5px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 4px;
+      }
+      .chat-md-content ul {
+        padding-left: 15px;
+        margin-bottom: 8px;
+        list-style-type: none;
+      }
+      .chat-md-content li {
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+        line-height: 1.4;
+      }
+
+      @media (max-width: 480px) {
+        .concierge-panel {
+          width: calc(100vw - 40px);
+          height: 480px;
+          right: -10px;
+        }
+      }
+    </style>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const toggleBtn = document.getElementById('concierge-toggle-btn');
+        const closeBtn = document.getElementById('concierge-close-btn');
+        const panel = document.getElementById('concierge-panel');
+        const form = document.getElementById('concierge-input-form');
+        const input = document.getElementById('concierge-input');
+        const messagesContainer = document.getElementById('concierge-messages');
+        const chips = document.querySelectorAll('.concierge-chip');
+
+        // Toggle chat panel
+        toggleBtn.addEventListener('click', () => {
+          panel.classList.toggle('d-none');
+          if (!panel.classList.contains('d-none')) {
+            input.focus();
+            scrollToBottom();
+          }
+        });
+
+        closeBtn.addEventListener('click', () => {
+          panel.classList.add('d-none');
+        });
+
+        // Submit query
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const query = input.value.trim();
+          if (!query) return;
+
+          input.value = '';
+          await handleMessageSubmit(query);
+        });
+
+        // Chip click
+        chips.forEach(chip => {
+          chip.addEventListener('click', async () => {
+            const query = chip.getAttribute('data-query');
+            await handleMessageSubmit(query);
+          });
+        });
+
+        async function handleMessageSubmit(query) {
+          // Append User Message
+          appendMessage(query, 'user-message');
+          scrollToBottom();
+
+          // Append Typing Indicator
+          appendTypingIndicator();
+          scrollToBottom();
+
+          await askAirNestConcierge(query);
+          scrollToBottom();
+        }
+
+        async function askAirNestConcierge(messageText) {
+          try {
+            // Replace with your actual backend port if using absolute paths, or use relative paths for environment independence
+            const response = await fetch('/api/ai/recommend', { 
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ userQuery: messageText })
+            });
+
+            const data = await response.json();
+            
+            if (!response.ok) {
+              throw new Error(data.error || "Server returned an unhealthy status code.");
+            }
+
+            renderBotResponse(data.response); // Successfully update your UI elements
+          } catch (error) {
+            console.error("Frontend Connection Error:", error);
+            showErrorMessage("Unable to connect to the AirNest Concierge service. Please check your connection.");
+          }
+        }
+
+        function renderBotResponse(responseText) {
+          const typingIndicator = document.querySelector('.typing-bubble');
+          if (typingIndicator) {
+            typingIndicator.remove();
+          }
+          if (responseText) {
+            const htmlContent = parseMarkdown(responseText);
+            appendMessage(htmlContent, 'system-message', true);
+          } else {
+            appendMessage('Sorry, I encountered an issue processing that. Please try again.', 'system-message');
+          }
+          scrollToBottom();
+        }
+
+        function showErrorMessage(message) {
+          const typingIndicator = document.querySelector('.typing-bubble');
+          if (typingIndicator) {
+            typingIndicator.remove();
+          }
+          appendMessage(message, 'system-message');
+          scrollToBottom();
+        }
+
+        function appendMessage(content, className, isHTML = false) {
+          const div = document.createElement('div');
+          div.className = `message ${className}`;
+          if (isHTML) {
+            div.innerHTML = content;
+          } else {
+            div.textContent = content;
+          }
+          messagesContainer.appendChild(div);
+          return div;
+        }
+
+        function appendTypingIndicator() {
+          const div = document.createElement('div');
+          div.className = 'typing-bubble';
+          div.innerHTML = `
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          `;
+          messagesContainer.appendChild(div);
+          return div;
+        }
+
+        function scrollToBottom() {
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function parseMarkdown(text) {
+          let html = text;
+          
+          // 1. Format lists items with key icons
+          html = html.replace(/\*\s*\*\*Financial Metric:\*\*\s*(.*?)\s*\|\s*\*\*Rating:\*\*\s*(.*)/gi, '<li>💸 <strong>Financial Metric:</strong> $1 | ⭐ <strong>Rating:</strong> $2</li>');
+          html = html.replace(/\*\s*\*\*Target Vectors:\*\*\s*(.*)/gi, '<li>🎯 <strong>Target Vectors:</strong> $1</li>');
+          html = html.replace(/\*\s*\*\*Algorithmic Justification:\*\*\s*(.*)/gi, '<li>🧠 <strong>Algorithmic Justification:</strong> $1</li>');
+
+          // Fallbacks for older formats if any
+          html = html.replace(/\*\s*\*\*Price:\*\*\s*(.*?)\s*\|\s*\*\*Rating:\*\*\s*(.*)/gi, '<li>💸 <strong>Price:</strong> $1 | ⭐ <strong>Rating:</strong> $2</li>');
+          html = html.replace(/\*\s*\*\*Key Features:\*\*\s*(.*)/gi, '<li>🔑 <strong>Key Features:</strong> $1</li>');
+          html = html.replace(/\*\s*\*\*Why it\'s perfect for you:\*\*\s*(.*)/gi, '<li>🎯 <strong>Why it\'s perfect:</strong> $1</li>');
+
+          // General list bullet parser
+          html = html.replace(/\*\s*(.*)/g, '<li>$1</li>');
+
+          // 2. Headings
+          // Match Level Header
+          html = html.replace(/####\s*🏢\s*(.*)/g, '<h6 class="text-success mt-2 mb-3"><i class="fas fa-building me-1"></i><strong>$1</strong></h6>');
+          
+          // Property headers (h5 list item starts)
+          html = html.replace(/#####\s*🏡\s*(.*)/g, '</ul><h6 class="mt-3 text-dark">🏡 <strong>$1</strong></h6><ul>');
+          html = html.replace(/####\s*🏡\s*(.*)/g, '</ul><h6 class="mt-3 text-dark">🏡 <strong>$1</strong></h6><ul>');
+
+          // Conversational Vector Refinement Header
+          html = html.replace(/####\s*💬\s*(.*)/g, '</ul><h6 class="mt-3 text-primary"><i class="fas fa-comments me-1"></i><strong>$1</strong></h6>');
+          
+          // General h4 and h5 matches
+          html = html.replace(/####\s*(.*)/g, '</ul><h6 class="mt-3"><strong>$1</strong></h6>');
+          
+          // Divider
+          html = html.replace(/---/g, '<hr class="my-2">');
+
+          // Bold tags
+          html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+          
+          // Line breaks
+          html = html.replace(/\n/g, '<br>');
+
+          // Fix list nesting balance
+          if (html.includes('<ul>') && !html.includes('</ul>')) {
+            html += '</ul>';
+          }
+          // Remove empty lists <ul></ul>
+          html = html.replace(/<ul>\s*<\/ul>/g, '');
+          
+          return `<div class="chat-md-content">${html}</div>`;
+        }
+      });
+    </script>
+
       <!-- Bootstrap JS -->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 

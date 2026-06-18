@@ -40,11 +40,22 @@ const initDB = async () => {
       "Lakefront",
     ];
 
+    const sampleAmenities = [
+      ["Wifi", "Air conditioning", "Kitchen", "Parking", "TV", "Pool"],
+      ["Wifi", "Kitchen", "Heating", "Workspace", "Pet friendly"],
+      ["Wifi", "Air conditioning", "Kitchen", "Beach access", "Hot tub"],
+      ["Wifi", "Heating", "Fireplace", "Mountain view", "Patio"],
+      ["Wifi", "Air conditioning", "Gym", "Elevator", "Security system"]
+    ];
+
     initData.data = initData.data.map((obj) => ({
       ...obj,
       owner: user._id,
       category: categories[Math.floor(Math.random() * categories.length)],
       reviews: [],
+      maxGuests: Math.floor(Math.random() * 5) + 2, // 2 to 6 guests
+      amenities: sampleAmenities[Math.floor(Math.random() * sampleAmenities.length)],
+      rating: parseFloat((Math.random() * 1.5 + 3.5).toFixed(1)), // 3.5 to 5.0
     }));
     await Listing.insertMany(initData.data);
     console.log("data was initialized");

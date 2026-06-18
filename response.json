@@ -1,0 +1,17 @@
+{
+  "status": 200,
+  "headers": {
+    "x-powered-by": "Express",
+    "content-type": "application/json; charset=utf-8",
+    "content-length": "865",
+    "etag": "W/\"361-36AkPoJ016m3zHuNKb5/goryawI\"",
+    "set-cookie": "connect.sid=s%3ANDz3QzaiGbgETa1RbIJHImeXrbi2jy5n.ttenGtSFGzPRnmq5Qz8zUNGKMKTvHBQHuPeNXad%2FXHI; Path=/; Expires=Thu, 25 Jun 2026 13:33:14 GMT; HttpOnly",
+    "date": "Thu, 18 Jun 2026 13:33:14 GMT",
+    "connection": "keep-alive",
+    "keep-alive": "timeout=5"
+  },
+  "data": {
+    "success": true,
+    "response": "#### 🏢 Match Level: Optimal Stays\n\n##### 🏡 Ski Chalet in Aspen\n* **Financial Metric:** ₹4000/night | **Rating:** ⭐ 5\n* **Target Vectors:** Wifi, Kitchen, Heating\n* **Algorithmic Justification:** Satisfies requested traveler count of 1 (maximum capacity: 4) and fits price parameter of ₹4000/night against budget limit of ₹5000.\n\n##### 🏡 Rustic Cabin by the Lake\n* **Financial Metric:** ₹900/night | **Rating:** ⭐ 4.9\n* **Target Vectors:** Wifi, Heating, Fireplace\n* **Algorithmic Justification:** Satisfies requested traveler count of 1 (maximum capacity: 2) and fits price parameter of ₹900/night against budget limit of ₹5000.\n\n---\n\n#### 💬 Conversational Vector Refinement\nI noticed that the target destination was not specified. Could you specify which city or region you are traveling to?"
+  }
+}

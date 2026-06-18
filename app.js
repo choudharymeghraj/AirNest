@@ -119,6 +119,10 @@ const initializeSession = async () => {
     app.use("/", userRouter);
     app.use("/", bookingRouter);
 
+    // AI Concierge Routes
+    const aiRoutes = require('./routes/aiRoutes');
+    app.use('/api/ai', aiRoutes);
+
     // -------------------- PAYMENT VERIFY (Razorpay) --------------------
     app.post("/payment/verify", async (req, res) => {
         try {
@@ -166,19 +170,18 @@ const initializeSession = async () => {
     });
 };
 
-initializeSession().catch(err => {
-    console.error("Failed to initialize session:", err);
-});
-
-
 // -------------------- SERVER --------------------
 // Export the app for Vercel (serverless function)
 module.exports = app;
 
-// Only listen if this file is run directly (not imported)
-if (require.main === module) {
-    const port = process.env.PORT || 8080;
-    app.listen(port, () => {
-        console.log(`Server is running on port ${port}`);
-    });
-}
+initializeSession().then(() => {
+    // Only listen if this file is run directly (not imported)
+    if (require.main === module) {
+        const port = process.env.PORT || 8080;
+        app.listen(port, () => {
+            console.log(`Server is running on port ${port}`);
+        });
+    }
+}).catch(err => {
+    console.error("Failed to initialize session:", err);
+});
